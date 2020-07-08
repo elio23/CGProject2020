@@ -472,7 +472,18 @@ createProgram:function(gl, vertexShader, fragmentShader) {
 			  }    
 		}
 		return out; 
-	},	
+	},
+
+	multiplyListOfMatrices: function(list){
+		// Perform list of matrices products
+		let result = this.identityMatrix();
+		if (list.length < 2) return list[0];
+		for(let i=0; i< list.length; i++){
+			result = this.multiplyMatrices(result,list[i]);
+		}
+		return result;
+	},
+
 
 	multiplyMatrixVector: function(m, v){
        /* Mutiplies a matrix [m] by a vector [v] */

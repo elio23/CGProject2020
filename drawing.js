@@ -4,9 +4,10 @@ var shaderDir;
 var program;
 
 //object used to store model data after being loaded
-var loadedModelData = function(vao,indicesLength) {
+var loadedModelData = function(vao,indicesLength,texture) {
   this.vao = vao;
   this.indicesLength = indicesLength;
+  this.texture = texture;
 };
 
 //---------3D Models declarations---------------
@@ -25,11 +26,11 @@ var chairModelTexture = 'models/chair/chair.png';
 
 function main() {
 
-  var dirLightAlpha = -utils.degToRad(-60);
+  var dirLightAlpha = -utils.degToRad(60);
   var dirLightBeta  = -utils.degToRad(120);
   var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
               Math.sin(dirLightAlpha), Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
-  var directionalLightColor = [0.8, 1.0, 1.0];
+  var directionalLightColor = [1.0, 1.0, 1.0];
 
 
   //SET Global states (viewport size, viewport background color, Depth test)
@@ -45,6 +46,9 @@ function main() {
   var lightColorHandle = gl.getUniformLocation(program, 'lightColor');
   var normalMatrixPositionHandle = gl.getUniformLocation(program, 'nMatrix');
 
+  //uniform for textures location
+  var textLocation = gl.getUniformLocation(program, "u_texture");
+
 
   //-----------------loading models--------------------
   var bed = loadModel(bedModel,bedModelTexture);
@@ -56,43 +60,53 @@ function main() {
   var objects = [];
 
   var roomNode = new Node();
-  roomNode.localMatrix = utils.MakeScaleMatrix(1,1,1);
+  roomNode.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
   roomNode.drawInfo = {
-    materialColor: [0.6, 0.6, 0.0],
+    materialColor: [1.0, 0.0, 0.0], //red
     programInfo: program,
     bufferLength: indexData.length,
     vertexArray: bed.vao,
     indicesLength: bed.indicesLength,
+    texture: bed.texture,
   };
 
   var bedNode = new Node();
+  bedNode.localMatrix = getLocalMatrix([-9.0,0.0,5.0],[0.0,0.0,0.0],[1.0,1.0,1.0]);
+  var bedBody = new Node();
 
-  bedNode.localMatrix =utils.multiplyMatrices(utils.MakeRotateZMatrix(10),utils.multiplyMatrices(utils.MakeRotateYMatrix(90),utils.MakeTranslateMatrix(-1.5,-192,-32))); //Temporary for testing
-  bedNode.drawInfo = {
-    materialColor: [0.2, 0.5, 0.8],
+  bedBody.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [6.0,6.0,6.0]);
+  bedBody.drawInfo = {
+    materialColor: [1.0,1.0,1.0],
     programInfo: program,
     bufferLength: indexData.length,
     vertexArray: bed.vao,
     indicesLength: bed.indicesLength,
+    texture: bed.texture,
   };
 
   var chairNode = new Node();
-  chairNode.localMatrix = utils.MakeRotateZMatrix(30);
-  chairNode.drawInfo = {
-    materialColor: [0.6, 0.6, 0.6],
+  chairNode.localMatrix = getLocalMatrix([1.0,0.0,0.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+
+  var chairBody = new Node();
+  chairBody.localMatrix = getLocalMatrix([100, 0,0.0],[-90.0,0.0,0.0], [0.1,0.1,0.1]);
+  chairBody.drawInfo = {
+    materialColor: [1.0,1.0,1.0],
     programInfo: program,
     bufferLength: indexData.length,
     vertexArray: chair.vao,
     indicesLength: chair.indicesLength,
+    texture: chair.texture,
   };
 
-  bedNode.setParent(roomNode);
+  bedBody.setParent(bedNode);
+  bedNode.setParent(roomNode)
+  chairBody.setParent(chairNode);
   chairNode.setParent(roomNode);
 
   var objects = [
     roomNode,
-    bedNode,
-    chairNode,
+    bedBody,
+    chairBody,
   ];
   //---------------SceneGraph defined-------------------
 
@@ -110,9 +124,9 @@ function main() {
     var projectionMatrix = utils.MakePerspective(60.0, aspect, 1.0, 2000.0);
 
     // Compute the camera matrix using look at.
-    var cameraPosition = [0.0, -200.0, 0.0];
+    var cameraPosition = [-25.0, 25.0, 0.0];
     var target = [0.0, 0.0, 0.0];
-    var up = [0.0, 0.0, 1.0];
+    var up = [0.0, 1.0, 0.0];
     var cameraMatrix = utils.LookAt(cameraPosition, target, up);
     var viewMatrix = utils.invertMatrix(cameraMatrix);
 
@@ -131,6 +145,10 @@ function main() {
     
       gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
       gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.texture);
+      gl.uniform1i(textLocation, 0);
 
       gl.uniform3fv(materialDiffColorHandle, object.drawInfo.materialColor);
       gl.uniform3fv(lightColorHandle,  directionalLightColor);
@@ -152,7 +170,7 @@ async function init(){
     baseDir = window.location.href.replace(page, '');
     console.log("basedir = " + baseDir);
     shaderDir = baseDir+"shaders/";
-    
+
       var canvas = document.getElementById("c");
       gl = canvas.getContext("webgl2");
       if (!gl) {
@@ -160,14 +178,16 @@ async function init(){
         return;
       }
       utils.resizeCanvasToDisplaySize(gl.canvas);
-    
+
       await utils.loadFiles([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'], function (shaderText) {
+        console.log(shaderText[0]);
+        console.log(shaderText[1]);
       var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
       var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
 
       program = utils.createProgram(gl, vertexShader, fragmentShader);
     });
-  
+
   gl.useProgram(program);
 
   //################################# Load Models #####################################
@@ -177,7 +197,7 @@ async function init(){
   //TODO for each 3d model
   //...
   //###################################################################################
-    
+
     main();
 }
 
@@ -186,9 +206,10 @@ window.onload = init();
 /**function that loads a 3D model and its texture (texture still not working)*/
 function loadModel(model, modelTexture){
 
+  //get uniforms from shaders
   var positionAttributeLocation = gl.getAttribLocation(program, "inPosition");
   var normalAttributeLocation = gl.getAttribLocation(program, "inNormal");
-  //var uvAttributeLocation = gl.getAttribLocation(program, "a_uv");
+  var uvAttributeLocation = gl.getAttribLocation(program, "a_uv");
 
   var vao = gl.createVertexArray();
   gl.bindVertexArray(vao);
@@ -213,25 +234,26 @@ function loadModel(model, modelTexture){
   gl.enableVertexAttribArray(normalAttributeLocation);
   gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
-/*  var uvBuffer = gl.createBuffer();
+  var uvBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoords), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(uvAttributeLocation);
-  gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);*/
+  gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
   var indexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-  //loadTexture(modelTexture);
+  var texture = loadTexture(modelTexture);
 
-  return new loadedModelData(vao,indices.length);
+  return new loadedModelData(vao,indices.length, texture);
 
 }
 
 /**Function used to load a texture*/
 function loadTexture(modelTexture){
   var texture = gl.createTexture();
+  gl.activeTexture(gl.TEXTURE0);
   gl.bindTexture(gl.TEXTURE_2D, texture);
 
   var image = new Image();
@@ -244,6 +266,13 @@ function loadTexture(modelTexture){
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.generateMipmap(gl.TEXTURE_2D);
   };
+  return texture;
+}
+
+function getLocalMatrix(position,rotation,scale){
+  let matricesList = [utils.MakeScaleMatrix(scale[0],scale[1],scale[2]),utils.MakeRotateXMatrix(rotation[0]),utils.MakeRotateXMatrix(rotation[1]),utils.MakeRotateXMatrix(rotation[2]),utils.MakeTranslateMatrix(position[0],position[1],position[2])];
+  console.log(utils);
+  return utils.multiplyListOfMatrices(matricesList);
 }
 
 
