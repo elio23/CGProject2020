@@ -4,8 +4,6 @@
     <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shaders/fs.glsl" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/fs.glsl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -62,6 +60,7 @@
       <workItem from="1594240177997" duration="601000" />
       <workItem from="1594240894051" duration="14000" />
       <workItem from="1594240993355" duration="3219000" />
+      <workItem from="1594562848867" duration="10289000" />
     </task>
     <servers />
   </component>

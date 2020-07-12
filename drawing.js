@@ -3,6 +3,14 @@ var baseDir;
 var shaderDir;
 var program;
 
+//Parameters for Camera
+var cx = -40.0;
+var cy = 25.0;
+var cz = 0.0;
+var elevation = -20.0;
+var angle = 90.0;
+var roll = 0.01;
+
 //object used to store model data after being loaded
 var loadedModelData = function(vao,indicesLength,texture) {
   this.vao = vao;
@@ -26,6 +34,18 @@ var chairModelTexture = 'models/chair/chair.png';
 
 function main() {
 
+  //Setting up mouse events
+  var canvas = document.getElementById("c");
+  canvas.addEventListener("mousedown", doMouseDown, false);
+  canvas.addEventListener("mouseup", doMouseUp, false);
+  canvas.addEventListener("mousemove", doMouseMove, false);
+
+  //Setting up keyboard events
+  //'window' is a JavaScript object (if "canvas", it will not work)
+  window.addEventListener("keyup", keyFunctionUp, false);
+  window.addEventListener("keydown", keyFunctionDown, false);
+
+  //Setting up lights
   var dirLightAlpha = -utils.degToRad(60);
   var dirLightBeta  = -utils.degToRad(120);
   var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
@@ -71,10 +91,10 @@ function main() {
   };
 
   var bedNode = new Node();
-  bedNode.localMatrix = getLocalMatrix([-9.0,0.0,5.0],[0.0,0.0,0.0],[1.0,1.0,1.0]);
+  bedNode.localMatrix = getLocalMatrix([-9.0,1.0,5.0],[0.0,0.0,0.0],[1.0,1.0,1.0]);
   var bedBody = new Node();
 
-  bedBody.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [6.0,6.0,6.0]);
+  bedBody.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [8.0,8.0,8.0]);
   bedBody.drawInfo = {
     materialColor: [1.0,1.0,1.0],
     programInfo: program,
@@ -119,18 +139,18 @@ function main() {
     gl.clearColor(0.85, 0.85, 0.85, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Compute the projection matrix
+    //compute aspect ratio
     var aspect = gl.canvas.width / gl.canvas.height;
-    var projectionMatrix = utils.MakePerspective(60.0, aspect, 1.0, 2000.0);
 
-    // Compute the camera matrix using look at.
-    var cameraPosition = [-25.0, 25.0, 0.0];
-    var target = [0.0, 0.0, 0.0];
-    var up = [0.0, 1.0, 0.0];
-    var cameraMatrix = utils.LookAt(cameraPosition, target, up);
-    var viewMatrix = utils.invertMatrix(cameraMatrix);
+    //compute new camera position
+    if(movingRight) moveCameraRight();
+    if(movingLeft) moveCameraLeft();
+    if(movingForward) moveCameraForward();
+    if(movingBackward) moveCameraBackward();
 
-    var viewProjectionMatrix = utils.multiplyMatrices(projectionMatrix, viewMatrix);
+    //compute viewMatrix for camera
+    var viewMatrix = utils.multiplyMatrices(
+        utils.MakeRotateZMatrix(-roll),utils.MakeView(cx, cy, cz, elevation, angle));
 
     // Update all world matrices in the scene graph
     roomNode.updateWorldMatrix();
@@ -139,8 +159,11 @@ function main() {
     objects.forEach(function(object) {
       
       gl.useProgram(object.drawInfo.programInfo);
-      
-      var projectionMatrix = utils.multiplyMatrices(viewProjectionMatrix, object.worldMatrix);
+
+      var perspectiveMatrix = utils.MakePerspective(60,aspect,1.0,2000.0);
+
+      var projectionMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);
+      projectionMatrix = utils.multiplyMatrices(perspectiveMatrix,projectionMatrix);
       var normalMatrix = utils.invertMatrix(utils.transposeMatrix(object.worldMatrix));
     
       gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
@@ -156,8 +179,6 @@ function main() {
 
       gl.bindVertexArray(object.drawInfo.vertexArray);
       gl.drawElements(gl.TRIANGLES, object.drawInfo.indicesLength, gl.UNSIGNED_SHORT, 0 );
-    
-
     });
 
     requestAnimationFrame(drawScene);
@@ -275,5 +296,121 @@ function getLocalMatrix(position,rotation,scale){
   return utils.multiplyListOfMatrices(matricesList);
 }
 
+//----------------------------Mouse events functions-------------------------------------------
+var mouseState = false;
+var lastMouseX = -100, lastMouseY = -100;
+function doMouseDown(event) {
+  lastMouseX = event.pageX;
+  lastMouseY = event.pageY;
+  mouseState = true;
+}
+function doMouseUp(event) {
+  lastMouseX = -100;
+  lastMouseY = -100;
+  mouseState = false;
+}
+function doMouseMove(event) {
+  if(mouseState) {
+    var dx = event.pageX - lastMouseX;
+    var dy = lastMouseY - event.pageY;
+    lastMouseX = event.pageX;
+    lastMouseY = event.pageY;
 
+    if((dx != 0) || (dy != 0)) {
+      angle = angle + 0.5 * dx;
+      elevation = elevation + 0.5 * dy;
+    }
+  }
+}
+//------------------------------------------------------------------------------------------------
+
+//-------------------------------------Input keys-------------------------------------------------
+var keys = [];
+
+var keyFunctionDown =function(e) {
+  if(!keys[e.keyCode]) {
+    keys[e.keyCode] = true;
+    switch(e.keyCode) {
+      case 37:
+//console.log("KeyUp   - Dir LEFT");
+        movingLeft = true;
+        break;
+      case 39:
+//console.log("KeyUp   - Dir RIGHT");
+        movingRight = true;
+        break;
+      case 38:
+//console.log("KeyUp   - Dir UP");
+        movingForward = true;
+        break;
+      case 40:
+//console.log("KeyUp   - Dir DOWN");
+        movingBackward = true;
+        break;
+    }
+  }
+//	console.log(e.keyCode);
+};
+
+var keyFunctionUp =function(e) {
+  if(keys[e.keyCode]) {
+    keys[e.keyCode] = false;
+    switch(e.keyCode) {
+      case 37:
+        //console.log("KeyUp   - Dir LEFT");
+        movingLeft = false;
+        break;
+      case 39:
+        //console.log("KeyUp   - Dir RIGHT");
+        movingRight = false;
+        break;
+      case 38:
+        //console.log("KeyUp   - Dir UP");
+        movingForward = false;
+        break;
+      case 40:
+        //console.log("KeyUp   - Dir DOWN");
+        movingBackward = false;
+        break;
+    }
+  }
+//console.log(e.keyCode);
+};
+
+//-------------------------------------------------------------------------------------------------
+
+//--------------------------First person camera movements------------------------------------------
+var velocity = 0.3;
+var movingRight = false;
+var movingLeft = false;
+var movingForward = false;
+var movingBackward = false;
+
+function moveCameraForward(){
+  console.log("direction = " +  angle);
+  cz= cz - Math.cos(utils.degToRad(angle))*velocity;
+  console.log("Cos(direction) = " + Math.cos(utils.degToRad(angle)));
+  cx= cx + Math.sin(utils.degToRad(angle))*velocity;
+  console.log("Sin(direction) = " + Math.sin(utils.degToRad(angle)));
+}
+
+function moveCameraLeft(){
+  console.log("direction = " +  angle);
+  cz= cz + Math.cos(utils.degToRad(angle+90))*velocity;
+  cx= cx - Math.sin(utils.degToRad(angle+90))*velocity;
+}
+
+function moveCameraRight(){
+  console.log("direction = " +  angle);
+  cz= cz + Math.cos(utils.degToRad(angle-90))*velocity;
+  cx= cx - Math.sin(utils.degToRad(angle-90))*velocity;
+}
+
+function moveCameraBackward(){
+  console.log("direction = " +  angle);
+  cz= cz - Math.cos(utils.degToRad(angle+180))*velocity;
+  cx= cx + Math.sin(utils.degToRad(angle+180))*velocity;
+}
+
+//---------------------------------------------------------------------------------------------------------
 
