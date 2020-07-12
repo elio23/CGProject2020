@@ -332,24 +332,40 @@ var keyFunctionDown =function(e) {
     keys[e.keyCode] = true;
     switch(e.keyCode) {
       case 37:
-//console.log("KeyUp   - Dir LEFT");
+        //console.log("KeyUp   - Dir LEFT");
         movingLeft = true;
         break;
       case 39:
-//console.log("KeyUp   - Dir RIGHT");
+        //console.log("KeyUp   - Dir RIGHT");
         movingRight = true;
         break;
       case 38:
-//console.log("KeyUp   - Dir UP");
+        //console.log("KeyUp   - Dir UP");
         movingForward = true;
         break;
       case 40:
-//console.log("KeyUp   - Dir DOWN");
+        //console.log("KeyUp   - Dir DOWN");
+        movingBackward = true;
+        break;
+      case 65:
+        //console.log("KeyUp   - Dir LEFT");
+        movingLeft = true;
+        break;
+      case 68:
+        //console.log("KeyUp   - Dir RIGHT");
+        movingRight = true;
+        break;
+      case 87:
+        //console.log("KeyUp   - Dir UP");
+        movingForward = true;
+        break;
+      case 83:
+        //console.log("KeyUp   - Dir DOWN");
         movingBackward = true;
         break;
     }
   }
-//	console.log(e.keyCode);
+//console.log(e.keyCode);
 };
 
 var keyFunctionUp =function(e) {
@@ -369,6 +385,22 @@ var keyFunctionUp =function(e) {
         movingForward = false;
         break;
       case 40:
+        //console.log("KeyUp   - Dir DOWN");
+        movingBackward = false;
+        break;
+      case 65:
+        //console.log("KeyUp   - Dir LEFT");
+        movingLeft = false;
+        break;
+      case 68:
+        //console.log("KeyUp   - Dir RIGHT");
+        movingRight = false;
+        break;
+      case 87:
+        //console.log("KeyUp   - Dir UP");
+        movingForward = false;
+        break;
+      case 83:
         //console.log("KeyUp   - Dir DOWN");
         movingBackward = false;
         break;
