@@ -27,6 +27,14 @@ var chairModel;
 var chairModelStr = 'models/chair/chair.json';
 var chairModelTexture = 'models/chair/chair.png';
 
+var closetModel;
+var closetModelStr = 'models/closet/closet.json';
+var closetModelTexture = 'models/closet/closet.png';
+
+var sofaModel;
+var sofaModelStr = 'models/sofa/sofa.json';
+var sofaModelTexture = 'models/sofa/verde.jpg';
+
 //TODO for each 3d model
 //...
 
@@ -73,6 +81,10 @@ function main() {
   //-----------------loading models--------------------
   var bed = loadModel(bedModel,bedModelTexture);
   var chair = loadModel(chairModel,chairModelTexture);
+  var closet = loadModel(closetModel,closetModelTexture);
+  var sofa = loadModel(sofaModel,sofaModelTexture); //Actually this is a 3d pallet model with a sofa texture
+  //TODO for each furniture model
+  //....
   //---------------------------------------------------
 
 
@@ -91,10 +103,10 @@ function main() {
   };
 
   var bedNode = new Node();
-  bedNode.localMatrix = getLocalMatrix([-9.0,1.0,5.0],[0.0,0.0,0.0],[1.0,1.0,1.0]);
+  bedNode.localMatrix = getLocalMatrix([-9.0,0.0,5.0],[0.0,0.0,0.0],[1.0,1.0,1.0]);
   var bedBody = new Node();
 
-  bedBody.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [8.0,8.0,8.0]);
+  bedBody.localMatrix = getLocalMatrix([0.0,0.1,0.0],[0.0,0.0,0.0], [8.0,8.0,8.0]);
   bedBody.drawInfo = {
     materialColor: [1.0,1.0,1.0],
     programInfo: program,
@@ -105,7 +117,7 @@ function main() {
   };
 
   var chairNode = new Node();
-  chairNode.localMatrix = getLocalMatrix([1.0,0.0,0.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+  chairNode.localMatrix = getLocalMatrix([1.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
 
   var chairBody = new Node();
   chairBody.localMatrix = getLocalMatrix([100, 0,0.0],[-90.0,0.0,0.0], [0.1,0.1,0.1]);
@@ -118,15 +130,62 @@ function main() {
     texture: chair.texture,
   };
 
+  var closetNode = new Node();
+  closetNode.localMatrix = getLocalMatrix([31.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+
+  var closetBody = new Node();
+  closetBody.localMatrix = getLocalMatrix([0.0,0.62,0.0],[0.0,180.0,0.0], [27.0,27.0,27.0]);
+  closetBody.drawInfo = {
+    materialColor: [1.0,1.0,1.0],
+    programInfo: program,
+    bufferLength: indexData.length,
+    vertexArray: closet.vao,
+    indicesLength: closet.indicesLength,
+    texture: closet.texture,
+  };
+
+  var sofaNode = new Node();
+  sofaNode.localMatrix = getLocalMatrix([51.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+
+  var sofaBody = new Node();
+  sofaBody.localMatrix = getLocalMatrix([0.0,-5.0,0.0],[0.0,180.0,0.0], [1.0,1.0,1.0]);
+  sofaBody.drawInfo = {
+    materialColor: [1.0,1.0,1.0],
+    programInfo: program,
+    bufferLength: indexData.length,
+    vertexArray: sofa.vao,
+    indicesLength: sofa.indicesLength,
+    texture: sofa.texture,
+  };
+
+  //TODO for each furniture model
+  //...
+
+  //building the scene graph
   bedBody.setParent(bedNode);
-  bedNode.setParent(roomNode)
+  bedNode.setParent(roomNode);
+
   chairBody.setParent(chairNode);
   chairNode.setParent(roomNode);
 
-  var objects = [
-    roomNode,
-    bedBody,
-    chairBody,
+  closetBody.setParent(closetNode);
+  closetNode.setParent(roomNode);
+
+  sofaBody.setParent(sofaNode);
+  sofaNode.setParent(roomNode);
+
+  //TODO for each furniture model
+  //...
+
+  //listing all models nodes
+  objects = [
+      roomNode,
+      bedBody,
+      chairBody,
+      closetBody,
+      sofaBody,
+      //TODO for each furniture model
+      //...
   ];
   //---------------SceneGraph defined-------------------
 
@@ -215,6 +274,8 @@ async function init(){
   //This loads the json model in the models variables previously declared
   await utils.get_json(bedModelStr, function(loadedModel){bedModel = loadedModel;});
   await utils.get_json(chairModelStr, function(loadedModel){chairModel = loadedModel;});
+  await utils.get_json(closetModelStr, function(loadedModel){closetModel = loadedModel;});
+  await utils.get_json(sofaModelStr, function(loadedModel){sofaModel = loadedModel;});
   //TODO for each 3d model
   //...
   //###################################################################################
@@ -291,7 +352,7 @@ function loadTexture(modelTexture){
 }
 
 function getLocalMatrix(position,rotation,scale){
-  let matricesList = [utils.MakeScaleMatrix(scale[0],scale[1],scale[2]),utils.MakeRotateXMatrix(rotation[0]),utils.MakeRotateXMatrix(rotation[1]),utils.MakeRotateXMatrix(rotation[2]),utils.MakeTranslateMatrix(position[0],position[1],position[2])];
+  let matricesList = [utils.MakeScaleMatrix(scale[0],scale[1],scale[2]),utils.MakeRotateXMatrix(rotation[0]),utils.MakeRotateYMatrix(rotation[1]),utils.MakeRotateZMatrix(rotation[2]),utils.MakeTranslateMatrix(position[0],position[1],position[2])];
   console.log(utils);
   return utils.multiplyListOfMatrices(matricesList);
 }
@@ -419,27 +480,25 @@ var movingForward = false;
 var movingBackward = false;
 
 function moveCameraForward(){
-  console.log("direction = " +  angle);
+  //console.log("direction = " +  angle);
   cz= cz - Math.cos(utils.degToRad(angle))*velocity;
-  console.log("Cos(direction) = " + Math.cos(utils.degToRad(angle)));
   cx= cx + Math.sin(utils.degToRad(angle))*velocity;
-  console.log("Sin(direction) = " + Math.sin(utils.degToRad(angle)));
 }
 
 function moveCameraLeft(){
-  console.log("direction = " +  angle);
+  //console.log("direction = " +  angle);
   cz= cz + Math.cos(utils.degToRad(angle+90))*velocity;
   cx= cx - Math.sin(utils.degToRad(angle+90))*velocity;
 }
 
 function moveCameraRight(){
-  console.log("direction = " +  angle);
+  //console.log("direction = " +  angle);
   cz= cz + Math.cos(utils.degToRad(angle-90))*velocity;
   cx= cx - Math.sin(utils.degToRad(angle-90))*velocity;
 }
 
 function moveCameraBackward(){
-  console.log("direction = " +  angle);
+  //console.log("direction = " +  angle);
   cz= cz - Math.cos(utils.degToRad(angle+180))*velocity;
   cx= cx + Math.sin(utils.degToRad(angle+180))*velocity;
 }
