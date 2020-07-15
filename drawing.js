@@ -191,7 +191,7 @@ function main() {
 
   requestAnimationFrame(drawScene);
 
-  // Draw the scene.
+  // Draw the scene called for each frame
   function drawScene(time) {
     time *= 0.001;
 
@@ -360,7 +360,7 @@ function getLocalMatrix(position,rotation,scale){
 //----------------------------Mouse events functions-------------------------------------------
 var mouseState = false;
 var lastMouseX = -100, lastMouseY = -100;
-const maxAngle = 45;  //max angle for elevation (to limit vertical camera rotations)
+const maxElevation = 60;  //max angle for elevation (to limit vertical camera rotations)
 function doMouseDown(event) {
   lastMouseX = event.pageX;
   lastMouseY = event.pageY;
@@ -380,7 +380,7 @@ function doMouseMove(event) {
 
     if((dx != 0) || (dy != 0)) {
       angle = angle + 0.5 * dx;
-      elevation = elevation + ((Math.abs(elevation + 0.5*dy)>maxAngle)?0:0.5*dy); //limit vertical rotations
+      elevation = elevation + ((Math.abs(elevation + 0.5*dy)>maxElevation)?0:0.5*dy); //limit vertical rotations
     }
   }
 }
