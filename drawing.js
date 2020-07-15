@@ -41,6 +41,10 @@ var sofaModel;
 var sofaModelStr = 'models/sofa/sofa.json';
 var sofaModelTexture = 'models/sofa/verde.jpg';
 
+var sofa2Model;
+var sofa2ModelStr = 'models/sofa2/sofa2.json';
+var sofa2ModelTexture = 'models/sofa2/mufiber03.png';
+
 //TODO for each 3d model
 //...
 
@@ -89,6 +93,7 @@ function main() {
   var chair = loadModel(chairModel,chairModelTexture);
   var closet = loadModel(closetModel,closetModelTexture);
   var sofa = loadModel(sofaModel,sofaModelTexture); //Actually this is a 3d pallet model with a sofa texture
+  var sofa2 = loadModel(sofa2Model,sofa2ModelTexture);
   //TODO for each furniture model
   //....
   //---------------------------------------------------
@@ -164,6 +169,20 @@ function main() {
     texture: sofa.texture,
   };
 
+  var sofa2Node = new Node();
+  sofa2Node.localMatrix = getLocalMatrix([0.0,0.0,30.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+
+  var sofa2Body = new Node();
+  sofa2Body.localMatrix = getLocalMatrix([0.0,0.0,-1],[0.0,180.0,0.0], [12.0,12.0,12.0]);
+  sofa2Body.drawInfo = {
+    materialColor: [1.0,1.0,1.0],
+    programInfo: program,
+    bufferLength: indexData.length,
+    vertexArray: sofa2.vao,
+    indicesLength: sofa2.indicesLength,
+    texture: sofa2.texture,
+  };
+
   //TODO for each furniture model
   //...
 
@@ -180,6 +199,9 @@ function main() {
   sofaBody.setParent(sofaNode);
   sofaNode.setParent(roomNode);
 
+  sofa2Body.setParent(sofa2Node);
+  sofa2Node.setParent(roomNode);
+
   //TODO for each furniture model
   //...
 
@@ -190,6 +212,7 @@ function main() {
       chairBody,
       closetBody,
       sofaBody,
+      sofa2Body,
       //TODO for each furniture model
       //...
   ];
@@ -278,10 +301,17 @@ async function init(){
 
   //################################# Load Models #####################################
   //This loads the json model in the models variables previously declared
+
+  //JSON models
   await utils.get_json(bedModelStr, function(loadedModel){bedModel = loadedModel;});
   await utils.get_json(chairModelStr, function(loadedModel){chairModel = loadedModel;});
   await utils.get_json(closetModelStr, function(loadedModel){closetModel = loadedModel;});
   await utils.get_json(sofaModelStr, function(loadedModel){sofaModel = loadedModel;});
+  await utils.get_json(sofa2ModelStr, function(loadedModel){sofa2Model = loadedModel;});
+
+  //Obj models
+  //...
+
   //TODO for each 3d model
   //...
   //###################################################################################
@@ -291,7 +321,7 @@ async function init(){
 
 window.onload = init();
 
-/**function that loads a 3D model and its texture (texture still not working)*/
+/**function that loads a 3D model and its texture*/
 function loadModel(model, modelTexture){
 
   //get uniforms from shaders
@@ -303,11 +333,22 @@ function loadModel(model, modelTexture){
   gl.bindVertexArray(vao);
 
   //Here we extract the position of the vertices, the normals, the indices, and the uv coordinates
-  console.log(model);
-  var vertices = model.meshes[0].vertices;
-  var normals = model.meshes[0].normals;
-  var indices = [].concat.apply([], model.meshes[0].faces);
-  var texCoords = model.meshes[0].texturecoords[0];
+  var vertices, normals, indices, texCoords;
+  if(model.meshes == null){
+    //Obj model
+    vertices = model.vertices;
+    normals = model.normals;
+    indices = model.indices;
+    texCoords = model.textures;
+  }
+  else {
+    //Json model
+    console.log(model);
+    vertices = model.meshes[0].vertices;
+    normals = model.meshes[0].normals;
+    indices = [].concat.apply([], model.meshes[0].faces);
+    texCoords = (model.meshes[0].texturecoords!=null)?model.meshes[0].texturecoords[0]:null;
+  }
 
   gl.bindVertexArray(vao);
   var positionBuffer = gl.createBuffer();
@@ -322,11 +363,13 @@ function loadModel(model, modelTexture){
   gl.enableVertexAttribArray(normalAttributeLocation);
   gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
 
-  var uvBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoords), gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(uvAttributeLocation);
-  gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+  if(texCoords!=null){
+    var uvBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoords), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(uvAttributeLocation);
+    gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+  }
 
   var indexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
