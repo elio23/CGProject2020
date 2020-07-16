@@ -3,11 +3,11 @@ var baseDir;
 var shaderDir;
 var program;
 
-objectsInScene = new Array();
+var viewMatrix;
+var perspectiveMatrix;
 
-objectsInScene[0] = [[-4.0, 0.0, 0.0], 1.5]
-objectsInScene[1] = [[0.0, 0.0, 0.0], 1.5]
-objectsInScene[2] = [[4.0, 0.0, 0.0], 1.5]
+
+var objects = [];
 
 //Parameters for Camera
 var cx = -40.0;
@@ -44,6 +44,10 @@ var sofaModelTexture = 'models/sofa/verde.jpg';
 var sofa2Model;
 var sofa2ModelStr = 'models/sofa2/sofa2.json';
 var sofa2ModelTexture = 'models/sofa2/mufiber03.png';
+
+var wallModel;
+var wallModelStr = 'models/empty_room/EmptyRoom.json';
+var wallModelTexture = 'model/empty_room/Wall.jpg';
 
 //TODO for each 3d model
 //...
@@ -94,18 +98,18 @@ function main() {
   var closet = loadModel(closetModel,closetModelTexture);
   var sofa = loadModel(sofaModel,sofaModelTexture); //Actually this is a 3d pallet model with a sofa texture
   var sofa2 = loadModel(sofa2Model,sofa2ModelTexture);
+  var wall = loadModel(wallModel, wallModelTexture)
   //TODO for each furniture model
   //....
   //---------------------------------------------------
 
 
   //-------------Define the scene Graph----------------
-  var objects = [];
 
-  var roomNode = new Node();
-  roomNode.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+  var roomNode = new Node ();
+  roomNode.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [1,1,1]);
   roomNode.drawInfo = {
-    materialColor: [1.0, 0.0, 0.0], //red
+    materialColor: [1.0,1.0,1.0],
     programInfo: program,
     bufferLength: indexData.length,
     vertexArray: bed.vao,
@@ -113,8 +117,29 @@ function main() {
     texture: bed.texture,
   };
 
+  var wallNode = new Node();
+
+  wallNode.localMatrix = getLocalMatrix([1, 0, 5],[0.0,0.0,0.0],[8,8,8]);
+  wallNode.collider = [[-9.0, 0.0, 5.0], 3.0]
+
+  var wallBody = new Node();
+
+  wallBody.localMatrix = getLocalMatrix([0.0,0.1,0.0],[0.0,0.0,0.0], [1,1,1]);
+  wallBody.drawInfo = {
+    materialColor: [1.0,1.0,1.0],
+    programInfo: program,
+    bufferLength: indexData.length,
+    vertexArray: wall.vao,
+    indicesLength: wall.indicesLength,
+    texture: wall.texture,
+  };
+
+
   var bedNode = new Node();
+
   bedNode.localMatrix = getLocalMatrix([-9.0,0.0,5.0],[0.0,0.0,0.0],[1.0,1.0,1.0]);
+  bedNode.collider = [[-9.0, 0.0, 5.0], 3.0]
+
   var bedBody = new Node();
 
   bedBody.localMatrix = getLocalMatrix([0.0,0.1,0.0],[0.0,0.0,0.0], [8.0,8.0,8.0]);
@@ -129,6 +154,7 @@ function main() {
 
   var chairNode = new Node();
   chairNode.localMatrix = getLocalMatrix([1.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+  chairNode.collider = [[1.0, 0.0, -10.0], 3.0]
 
   var chairBody = new Node();
   chairBody.localMatrix = getLocalMatrix([100, 0,0.0],[-90.0,0.0,0.0], [0.1,0.1,0.1]);
@@ -143,6 +169,7 @@ function main() {
 
   var closetNode = new Node();
   closetNode.localMatrix = getLocalMatrix([31.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+  closetNode.collider = [[31.0, 0.0, -10.0], 3.0]
 
   var closetBody = new Node();
   closetBody.localMatrix = getLocalMatrix([0.0,0.62,0.0],[0.0,180.0,0.0], [27.0,27.0,27.0]);
@@ -157,6 +184,7 @@ function main() {
 
   var sofaNode = new Node();
   sofaNode.localMatrix = getLocalMatrix([51.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+  sofaNode.collider = [[51.0, 0.0, -10.0], 3.0]
 
   var sofaBody = new Node();
   sofaBody.localMatrix = getLocalMatrix([0.0,-5.0,0.0],[0.0,180.0,0.0], [1.0,1.0,1.0]);
@@ -171,6 +199,7 @@ function main() {
 
   var sofa2Node = new Node();
   sofa2Node.localMatrix = getLocalMatrix([0.0,0.0,30.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
+  sofa2Node.collider = [[0.0, 0.0, 30.0], 3.0]
 
   var sofa2Body = new Node();
   sofa2Body.localMatrix = getLocalMatrix([0.0,0.0,-1],[0.0,180.0,0.0], [12.0,12.0,12.0]);
@@ -187,6 +216,7 @@ function main() {
   //...
 
   //building the scene graph
+
   bedBody.setParent(bedNode);
   bedNode.setParent(roomNode);
 
@@ -202,6 +232,9 @@ function main() {
   sofa2Body.setParent(sofa2Node);
   sofa2Node.setParent(roomNode);
 
+  wallBody.setParent(wallNode);
+  wallNode.setParent(roomNode);
+
   //TODO for each furniture model
   //...
 
@@ -213,6 +246,7 @@ function main() {
       closetBody,
       sofaBody,
       sofa2Body,
+      wallBody
       //TODO for each furniture model
       //...
   ];
@@ -237,7 +271,7 @@ function main() {
     if(movingBackward) moveCameraBackward();
 
     //compute viewMatrix for camera
-    var viewMatrix = utils.multiplyMatrices(
+    viewMatrix = utils.multiplyMatrices(
         utils.MakeRotateZMatrix(-roll),utils.MakeView(cx, cy, cz, elevation, angle));
 
     // Update all world matrices in the scene graph
@@ -245,15 +279,15 @@ function main() {
 
     // Compute all the matrices for rendering
     objects.forEach(function(object) {
-      
+
       gl.useProgram(object.drawInfo.programInfo);
 
-      var perspectiveMatrix = utils.MakePerspective(60,aspect,1.0,2000.0);
+      perspectiveMatrix = utils.MakePerspective(60,aspect,1.0,2000.0);
 
       var projectionMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);
       projectionMatrix = utils.multiplyMatrices(perspectiveMatrix,projectionMatrix);
       var normalMatrix = utils.invertMatrix(utils.transposeMatrix(object.worldMatrix));
-    
+
       gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
       gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
 
@@ -308,6 +342,8 @@ async function init(){
   await utils.get_json(closetModelStr, function(loadedModel){closetModel = loadedModel;});
   await utils.get_json(sofaModelStr, function(loadedModel){sofaModel = loadedModel;});
   await utils.get_json(sofa2ModelStr, function(loadedModel){sofa2Model = loadedModel;});
+  await utils.get_json(wallModelStr, function(loadedModel){wallModel = loadedModel;});
+
 
   //Obj models
   //...
@@ -401,8 +437,13 @@ function loadTexture(modelTexture){
 }
 
 function getLocalMatrix(position,rotation,scale){
-  let matricesList = [utils.MakeScaleMatrix(scale[0],scale[1],scale[2]),utils.MakeRotateXMatrix(rotation[0]),utils.MakeRotateYMatrix(rotation[1]),utils.MakeRotateZMatrix(rotation[2]),utils.MakeTranslateMatrix(position[0],position[1],position[2])];
-  console.log(utils);
+  let matricesList = [
+      utils.MakeScaleMatrix(scale[0],scale[1],scale[2]),
+      utils.MakeRotateXMatrix(rotation[0]),
+      utils.MakeRotateYMatrix(rotation[1]),
+      utils.MakeRotateZMatrix(rotation[2]),
+      utils.MakeTranslateMatrix(position[0],position[1],position[2])
+  ];
   return utils.multiplyListOfMatrices(matricesList);
 }
 
@@ -427,7 +468,7 @@ function doMouseMove(event) {
     lastMouseX = event.pageX;
     lastMouseY = event.pageY;
 
-    if((dx != 0) || (dy != 0)) {
+    if((dx !== 0) || (dy !== 0)) {
       angle = angle + 0.5 * dx;
       elevation = elevation + ((Math.abs(elevation + 0.5*dy)>maxElevation)?0:0.5*dy); //limit vertical rotations
     }
@@ -567,7 +608,7 @@ function raySphereIntersection(rayStartPoint, rayNormalisedDir, sphereCentre, sp
       console.log("ray origin inside sphere");
       return true;
   }
-  //Projection of l onto the ray direction 
+  //Projection of l onto the ray direction
   var s = l[0] * rayNormalisedDir[0] + l[1] * rayNormalisedDir[1] + l[2] * rayNormalisedDir[2];
   //The spere is behind the ray origin so no intersection
   if(s < 0){
@@ -581,10 +622,10 @@ function raySphereIntersection(rayStartPoint, rayNormalisedDir, sphereCentre, sp
       console.log("m squared > r squared");
       return false;
   }
-  //Now we can say that the ray will hit the sphere 
+  //Now we can say that the ray will hit the sphere
   console.log("hit");
   return true;
-  
+
 }
 
 function myOnMouseUp(ev){
@@ -605,41 +646,42 @@ function myOnMouseUp(ev){
   console.log("left "+left+" top "+top);
   var x = ev.clientX - left;
   var y = ev.clientY - top;
-      
+
   //Here we calculate the normalised device coordinates from the pixel coordinates of the canvas
-  console.log("ClientX "+x+" ClientY "+y);
+  //console.log("ClientX "+x+" ClientY "+y);
   var normX = (2*x)/ gl.canvas.width - 1;
   var normY = 1 - (2*y) / gl.canvas.height;
-  console.log("NormX "+normX+" NormY "+normY);
+  //console.log("NormX "+normX+" NormY "+normY);
 
   //We need to go through the transformation pipeline in the inverse order so we invert the matrices
   var projInv = utils.invertMatrix(perspectiveMatrix);
   var viewInv = utils.invertMatrix(viewMatrix);
-  
+
   //Find the point (un)projected on the near plane, from clip space coords to eye coords
   //z = -1 makes it so the point is on the near plane
   //w = 1 is for the homogeneous coordinates in clip space
   var pointEyeCoords = utils.multiplyMatrixVector(projInv, [normX, normY, -1, 1]);
-  console.log("Point eye coords "+pointEyeCoords);
+  //console.log("Point eye coords "+pointEyeCoords);
 
   //This finds the direction of the ray in eye space
-  //Formally, to calculate the direction you would do dir = point - eyePos but since we are in eye space eyePos = [0,0,0] 
+  //Formally, to calculate the direction you would do dir = point - eyePos but since we are in eye space eyePos = [0,0,0]
   //w = 0 is because this is not a point anymore but is considered as a direction
   var rayEyeCoords = [pointEyeCoords[0], pointEyeCoords[1], pointEyeCoords[2], 0];
 
-  
+
   //We find the direction expressed in world coordinates by multipling with the inverse of the view matrix
   var rayDir = utils.multiplyMatrixVector(viewInv, rayEyeCoords);
-  console.log("Ray direction "+rayDir);
-  var normalisedRayDir = normaliseVector(rayDir);
-  console.log("normalised ray dir "+normalisedRayDir);
+  //console.log("Ray direction "+rayDir);
+  var normalisedRayDir = utils.normalize(rayDir);
+  //console.log("normalised ray dir "+normalisedRayDir);
   //The ray starts from the camera in world coordinates
   var rayStartPoint = [cx, cy, cz];
-  
+
   //We iterate on all the objects in the scene to check for collisions
-  for(i = 0; i < objectsInScene.length; i++){
-      var hit = raySphereIntersection(rayStartPoint, normalisedRayDir, objectsInScene[i][0], objectsInScene[i][1]);
-      if(hit){
+  for(let i = 1; i < objects.length; i++){
+      let collider = objects[i].parent.collider
+      let hit = raySphereIntersection(rayStartPoint, normalisedRayDir, collider[0], collider[1]);
+      if (hit) {
           console.log("hit sphere number "+i);
           colours[i] = [Math.random(), Math.random(), Math.random(), 1];
       }
