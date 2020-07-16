@@ -104,6 +104,145 @@ function main() {
   //---------------------------------------------------
 
 
+  let items = [
+    /*{
+      parent: {
+        position: [-9, 0, 5],
+      },
+      body: {
+        position: [],
+        rotation: [],
+        scale: [8, 8, 8]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [-9, 0, 5],
+      },
+      body: {
+        position: [],
+        rotation: [],
+        scale: [8, 8, 8]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [-9, 0, 5],
+      },
+      body: {
+        position: [],
+        rotation: [],
+        scale: [8, 8, 8]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [-9, 0, 5],
+      },
+      body: {
+        position: [],
+        rotation: [],
+        scale: [8, 8, 8]
+      },
+      model: wall,
+    },*/
+    {
+      parent: {
+        position: [-9.0, 0.0, 5.0],
+      },
+      body: {
+        position: [0.0, 0.1, 0.0],
+        rotation: [0.0, 0.0, 0.0],
+        scale: [8.0, 8.0, 8.0]
+      },
+      model: bed,
+    },
+    {
+      parent: {
+        position: [51.0, 0.0, -10.0],
+      },
+      body: {
+        position: [0.0, -5.0, 0.0],
+        rotation: [0.0, 180.0, 0.0],
+        scale: [1.0, 1.0, 1.0]
+      },
+      model: sofa,
+    },
+    {
+      parent: {
+        position: [0.0, 0.0, 30.0],
+      },
+      body: {
+        position: [0.0, 0.0, -1.0],
+        rotation: [0.0, 180.0, 0.0],
+        scale: [12.0, 12.0, 12.0]
+      },
+      model: sofa2,
+    },
+    {
+      parent: {
+        position: [1.0, 0.0, -10.0],
+      },
+      body: {
+        position: [100.0, 0.0, 0.0],
+        rotation: [-90.0, 0.0, 0.0],
+        scale: [0.1, 0.1, 0.1]
+      },
+      model: chair,
+    },
+    {
+      parent: {
+        position: [31.0, 0.0, -10.0],
+      },
+      body: {
+        position: [0.0, 0.62, 0.0],
+        rotation: [0.0, 180.0, 0.0],
+        scale: [27.0, 27.0, 27.0]
+      },
+      model: closet,
+    },
+  ]
+
+  setGraph = (items, rootNode) => {
+
+    items.forEach(item => {
+
+      let itemNode = new Node();
+      let itemBody = new Node();
+
+      itemNode.localMatrix = getLocalMatrix(
+          item.parent.position,
+          [0.0,0.0,0.0],
+          [1.0, 1.0, 1.0]
+      );
+      itemNode.collider = [item.parent.position, 3.0]
+
+      itemBody.localMatrix = getLocalMatrix(
+          item.body.position,
+          item.body.rotation,
+          item.body.scale
+      );
+
+      itemBody.drawInfo = {
+        materialColor: [1.0,1.0,1.0],
+        programInfo: program,
+        bufferLength: indexData.length,
+        vertexArray: item.model.vao,
+        indicesLength: item.model.indicesLength,
+        texture: item.model.texture,
+      };
+
+      itemBody.setParent(itemNode);
+      itemNode.setParent(rootNode);
+
+      objects.push(itemBody);
+
+    })
+  }
+
   //-------------Define the scene Graph----------------
 
   var roomNode = new Node ();
@@ -117,139 +256,9 @@ function main() {
     texture: bed.texture,
   };
 
-  var wallNode = new Node();
+  objects.push(roomNode);
 
-  wallNode.localMatrix = getLocalMatrix([1, 0, 5],[0.0,0.0,0.0],[8,8,8]);
-  wallNode.collider = [[-9.0, 0.0, 5.0], 3.0]
-
-  var wallBody = new Node();
-
-  wallBody.localMatrix = getLocalMatrix([0.0,0.1,0.0],[0.0,0.0,0.0], [1,1,1]);
-  wallBody.drawInfo = {
-    materialColor: [1.0,1.0,1.0],
-    programInfo: program,
-    bufferLength: indexData.length,
-    vertexArray: wall.vao,
-    indicesLength: wall.indicesLength,
-    texture: wall.texture,
-  };
-
-
-  var bedNode = new Node();
-
-  bedNode.localMatrix = getLocalMatrix([-9.0,0.0,5.0],[0.0,0.0,0.0],[1.0,1.0,1.0]);
-  bedNode.collider = [[-9.0, 0.0, 5.0], 3.0]
-
-  var bedBody = new Node();
-
-  bedBody.localMatrix = getLocalMatrix([0.0,0.1,0.0],[0.0,0.0,0.0], [8.0,8.0,8.0]);
-  bedBody.drawInfo = {
-    materialColor: [1.0,1.0,1.0],
-    programInfo: program,
-    bufferLength: indexData.length,
-    vertexArray: bed.vao,
-    indicesLength: bed.indicesLength,
-    texture: bed.texture,
-  };
-
-  var chairNode = new Node();
-  chairNode.localMatrix = getLocalMatrix([1.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
-  chairNode.collider = [[1.0, 0.0, -10.0], 3.0]
-
-  var chairBody = new Node();
-  chairBody.localMatrix = getLocalMatrix([100, 0,0.0],[-90.0,0.0,0.0], [0.1,0.1,0.1]);
-  chairBody.drawInfo = {
-    materialColor: [1.0,1.0,1.0],
-    programInfo: program,
-    bufferLength: indexData.length,
-    vertexArray: chair.vao,
-    indicesLength: chair.indicesLength,
-    texture: chair.texture,
-  };
-
-  var closetNode = new Node();
-  closetNode.localMatrix = getLocalMatrix([31.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
-  closetNode.collider = [[31.0, 0.0, -10.0], 3.0]
-
-  var closetBody = new Node();
-  closetBody.localMatrix = getLocalMatrix([0.0,0.62,0.0],[0.0,180.0,0.0], [27.0,27.0,27.0]);
-  closetBody.drawInfo = {
-    materialColor: [1.0,1.0,1.0],
-    programInfo: program,
-    bufferLength: indexData.length,
-    vertexArray: closet.vao,
-    indicesLength: closet.indicesLength,
-    texture: closet.texture,
-  };
-
-  var sofaNode = new Node();
-  sofaNode.localMatrix = getLocalMatrix([51.0,0.0,-10.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
-  sofaNode.collider = [[51.0, 0.0, -10.0], 3.0]
-
-  var sofaBody = new Node();
-  sofaBody.localMatrix = getLocalMatrix([0.0,-5.0,0.0],[0.0,180.0,0.0], [1.0,1.0,1.0]);
-  sofaBody.drawInfo = {
-    materialColor: [1.0,1.0,1.0],
-    programInfo: program,
-    bufferLength: indexData.length,
-    vertexArray: sofa.vao,
-    indicesLength: sofa.indicesLength,
-    texture: sofa.texture,
-  };
-
-  var sofa2Node = new Node();
-  sofa2Node.localMatrix = getLocalMatrix([0.0,0.0,30.0],[0.0,0.0,0.0], [1.0,1.0,1.0]);
-  sofa2Node.collider = [[0.0, 0.0, 30.0], 3.0]
-
-  var sofa2Body = new Node();
-  sofa2Body.localMatrix = getLocalMatrix([0.0,0.0,-1],[0.0,180.0,0.0], [12.0,12.0,12.0]);
-  sofa2Body.drawInfo = {
-    materialColor: [1.0,1.0,1.0],
-    programInfo: program,
-    bufferLength: indexData.length,
-    vertexArray: sofa2.vao,
-    indicesLength: sofa2.indicesLength,
-    texture: sofa2.texture,
-  };
-
-  //TODO for each furniture model
-  //...
-
-  //building the scene graph
-
-  bedBody.setParent(bedNode);
-  bedNode.setParent(roomNode);
-
-  chairBody.setParent(chairNode);
-  chairNode.setParent(roomNode);
-
-  closetBody.setParent(closetNode);
-  closetNode.setParent(roomNode);
-
-  sofaBody.setParent(sofaNode);
-  sofaNode.setParent(roomNode);
-
-  sofa2Body.setParent(sofa2Node);
-  sofa2Node.setParent(roomNode);
-
-  wallBody.setParent(wallNode);
-  wallNode.setParent(roomNode);
-
-  //TODO for each furniture model
-  //...
-
-  //listing all models nodes
-  objects = [
-      roomNode,
-      bedBody,
-      chairBody,
-      closetBody,
-      sofaBody,
-      sofa2Body,
-      wallBody
-      //TODO for each furniture model
-      //...
-  ];
+  setGraph(items, roomNode)
   //---------------SceneGraph defined-------------------
 
   requestAnimationFrame(drawScene);
