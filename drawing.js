@@ -18,10 +18,10 @@ var angle = 90.0;
 var roll = 0.01;
 
 //object used to store model data after being loaded
-var loadedModelData = function(vao,indicesLength,texture) {
+var loadedModelData = function(vao,indicesLength,textures) {
   this.vao = vao;
   this.indicesLength = indicesLength;
-  this.texture = texture;
+  this.textures = textures;
 };
 
 //---------3D Models declarations---------------
@@ -39,11 +39,18 @@ var closetModelTexture = 'models/closet/closet.png';
 
 var sofaModel;
 var sofaModelStr = 'models/sofa/sofa.json';
-var sofaModelTexture = 'models/sofa/verde.jpg';
+var sofaModelTexture1 = 'models/sofa/verde.jpg';
+var sofaModelTexture2 = 'models/sofa/url.jpg';
+var sofaModelTexture3 = 'models/sofa/bianco.jpg';
+var sofaModelTexture4 = 'models/sofa/TEXT_MDF.jpg';
 
 var sofa2Model;
 var sofa2ModelStr = 'models/sofa2/sofa2.json';
 var sofa2ModelTexture = 'models/sofa2/mufiber03.png';
+
+var tableModel;
+var tableModelStr = 'models/table/wooden-coffe-table.json';
+var tableModelTexture = 'models/table/wooden-coffe-table.jpg';
 
 var wallModel;
 var wallModelStr = 'models/empty_room/EmptyRoom.json';
@@ -93,12 +100,13 @@ function main() {
 
 
   //-----------------loading models--------------------
-  var bed = loadModel(bedModel,bedModelTexture);
-  var chair = loadModel(chairModel,chairModelTexture);
-  var closet = loadModel(closetModel,closetModelTexture);
-  var sofa = loadModel(sofaModel,sofaModelTexture); //Actually this is a 3d pallet model with a sofa texture
-  var sofa2 = loadModel(sofa2Model,sofa2ModelTexture);
-  var wall = loadModel(wallModel, wallModelTexture)
+  var bed = loadModel(bedModel,[bedModelTexture]);
+  var chair = loadModel(chairModel,[chairModelTexture]);
+  var closet = loadModel(closetModel,[closetModelTexture]);
+  var sofa = loadModel(sofaModel,[sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]); //Actually this is a 3d pallet model with a sofa texture
+  var sofa2 = loadModel(sofa2Model,[sofa2ModelTexture, sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]);
+  //var table = loadModel(tableModel, [tableModelTexture])
+  var wall = loadModel(wallModel, [wallModelTexture])
   //TODO for each furniture model
   //....
   //---------------------------------------------------
@@ -204,6 +212,17 @@ function main() {
       },
       model: closet,
     },
+    /*{
+      parent: {
+        position: [0.0, 0.0, 50.0],
+      },
+      body: {
+        position: [0.0, 0.62, 0.0],
+        rotation: [0.0, 180.0, 0.0],
+        scale: [10.0, 10.0, 10.0]
+      },
+      model: table,
+    },*/
   ]
 
   setGraph = (items, rootNode) => {
@@ -232,7 +251,8 @@ function main() {
         bufferLength: indexData.length,
         vertexArray: item.model.vao,
         indicesLength: item.model.indicesLength,
-        texture: item.model.texture,
+        textures: item.model.textures,
+        currentTextureIndex: 0, // default texture loaded is the one at index 0 of the textures array
       };
 
       itemBody.setParent(itemNode);
@@ -253,7 +273,7 @@ function main() {
     bufferLength: indexData.length,
     vertexArray: bed.vao,
     indicesLength: bed.indicesLength,
-    texture: bed.texture,
+    textures: bed.textures,
   };
 
   objects.push(roomNode);
@@ -279,6 +299,7 @@ function main() {
     if(movingForward) moveCameraForward();
     if(movingBackward) moveCameraBackward();
 
+
     //compute viewMatrix for camera
     viewMatrix = utils.multiplyMatrices(
         utils.MakeRotateZMatrix(-roll),utils.MakeView(cx, cy, cz, elevation, angle));
@@ -301,7 +322,7 @@ function main() {
       gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
 
       gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.texture);
+      gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textures[object.drawInfo.currentTextureIndex]); // default texture loaded is the one at index 0 of the textures array
       gl.uniform1i(textLocation, 0);
 
       gl.uniform3fv(materialDiffColorHandle, object.drawInfo.materialColor);
@@ -351,10 +372,13 @@ async function init(){
   await utils.get_json(closetModelStr, function(loadedModel){closetModel = loadedModel;});
   await utils.get_json(sofaModelStr, function(loadedModel){sofaModel = loadedModel;});
   await utils.get_json(sofa2ModelStr, function(loadedModel){sofa2Model = loadedModel;});
+  //await utils.get_json(tableModelStr, function(loadedModel){tableModel = loadedModel;});
   await utils.get_json(wallModelStr, function(loadedModel){wallModel = loadedModel;});
 
 
   //Obj models
+  /*var tableObjStr = await utils.get_objstr(baseDir+ tableModelStr);
+  tableModel = new OBJ.Mesh(tableObjStr);*/
   //...
 
   //TODO for each 3d model
@@ -367,7 +391,7 @@ async function init(){
 window.onload = init();
 
 /**function that loads a 3D model and its texture*/
-function loadModel(model, modelTexture){
+function loadModel(model, modelTextures){
 
   //get uniforms from shaders
   var positionAttributeLocation = gl.getAttribLocation(program, "inPosition");
@@ -420,9 +444,12 @@ function loadModel(model, modelTexture){
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-  var texture = loadTexture(modelTexture);
+  var textures = [];
+  modelTextures.forEach((texture) => {
+    textures.push(loadTexture(texture));
+  });
 
-  return new loadedModelData(vao,indices.length, texture);
+  return new loadedModelData(vao,indices.length, textures);
 
 }
 
