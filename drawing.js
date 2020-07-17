@@ -47,7 +47,7 @@ var sofa2ModelTexture = 'models/sofa2/mufiber03.png';
 
 var wallModel;
 var wallModelStr = 'models/empty_room/EmptyRoom.json';
-var wallModelTexture = 'model/empty_room/Wall.jpg';
+var wallModelTexture = 'models/empty_room/Wall.jpg';
 
 //TODO for each 3d model
 //...
@@ -110,8 +110,8 @@ function main() {
         position: [-9, 0, 5],
       },
       body: {
-        position: [],
-        rotation: [],
+        position: [0,0,0],
+        rotation: [0,0,0],
         scale: [8, 8, 8]
       },
       model: wall,
