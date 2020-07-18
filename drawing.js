@@ -48,6 +48,7 @@ var sofa2Model;
 var sofa2ModelStr = 'models/sofa2/sofa2.json';
 var sofa2ModelTexture = 'models/sofa2/mufiber03.png';
 
+
 var tableModel;
 var tableModelStr = 'models/table/wooden-coffe-table.json';
 var tableModelTexture = 'models/table/wooden-coffe-table.jpg';
@@ -55,6 +56,7 @@ var tableModelTexture = 'models/table/wooden-coffe-table.jpg';
 var wallModel;
 var wallModelStr = 'models/empty_room/EmptyRoom.json';
 var wallModelTexture = 'models/empty_room/Wall.jpg';
+var floorModelTexture = 'models/empty_room/Floor.jpg'
 
 //TODO for each 3d model
 //...
@@ -105,8 +107,10 @@ function main() {
   var closet = loadModel(closetModel,[closetModelTexture]);
   var sofa = loadModel(sofaModel,[sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]); //Actually this is a 3d pallet model with a sofa texture
   var sofa2 = loadModel(sofa2Model,[sofa2ModelTexture, sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]);
+
   //var table = loadModel(tableModel, [tableModelTexture])
   var wall = loadModel(wallModel, [wallModelTexture])
+  var floor = loadModel(wallModel, [floorModelTexture])
   //TODO for each furniture model
   //....
   //---------------------------------------------------
@@ -134,29 +138,106 @@ function main() {
         scale: [8, 8, 8]
       },
       model: wall,
-    },
-    {
-      parent: {
-        position: [-9, 0, 5],
-      },
-      body: {
-        position: [],
-        rotation: [],
-        scale: [8, 8, 8]
-      },
-      model: wall,
-    },
-    {
-      parent: {
-        position: [-9, 0, 5],
-      },
-      body: {
-        position: [],
-        rotation: [],
-        scale: [8, 8, 8]
-      },
-      model: wall,
     },*/
+    {
+      parent: {
+        position: [-9, -0.5, -61],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 90, 0],
+        scale: [20, 20, 20]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [66, -1.0, -61.5],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 90, 0],
+        scale: [20, 20, 20]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [-9, -0.5, 89],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 90, 0],
+        scale: [20, 20, 20]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [66, -1.0, 89.5],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 90, 0],
+        scale: [20, 20, 20]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [-50, 210, 50],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 90],
+        scale: [100, 100, 100]
+      },
+      model: floor,
+    },
+    {
+      parent: {
+        position: [-89.5, 0.5, 95],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [20, 20, 20]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [-90, 0, 20],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [20, 20, 20]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [60.5, 0.5, 95],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [20, 20, 20]
+      },
+      model: wall,
+    },
+    {
+      parent: {
+        position: [60, 0, 20],
+      },
+      body: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [20, 20, 20]
+      },
+      model: wall,
+    },
     {
       parent: {
         position: [-9.0, 0.0, 5.0],
@@ -374,6 +455,7 @@ async function init(){
   await utils.get_json(sofa2ModelStr, function(loadedModel){sofa2Model = loadedModel;});
   //await utils.get_json(tableModelStr, function(loadedModel){tableModel = loadedModel;});
   await utils.get_json(wallModelStr, function(loadedModel){wallModel = loadedModel;});
+
 
 
   //Obj models
