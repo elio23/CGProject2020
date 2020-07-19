@@ -1,6 +1,6 @@
 //This set of functions is used to create the scene graph
 
-var Node = function() {
+let Node = function() {
     this.children = [];
     this.localMatrix = utils.identityMatrix();
     this.worldMatrix = utils.identityMatrix();
@@ -9,7 +9,7 @@ var Node = function() {
 Node.prototype.setParent = function(parent) {
     // remove us from our parent
     if (this.parent) {
-        var ndx = this.parent.children.indexOf(this);
+        let ndx = this.parent.children.indexOf(this);
         if (ndx >= 0) {
             this.parent.children.splice(ndx, 1);
         }
@@ -32,8 +32,9 @@ Node.prototype.updateWorldMatrix = function(matrix) {
     }
 
     // now process all the children
-    var worldMatrix = this.worldMatrix;
+    let worldMatrix = this.worldMatrix;
     this.children.forEach(function(child) {
         child.updateWorldMatrix(worldMatrix);
     });
 };
+

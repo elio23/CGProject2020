@@ -1,62 +1,62 @@
-var gl;
-var baseDir;
-var shaderDir;
-var program;
+let gl;
+let baseDir;
+let shaderDir;
+let program;
 
-var viewMatrix;
-var perspectiveMatrix;
+let viewMatrix;
+let perspectiveMatrix;
 
 
-var objects = [];
+let objects = [];
 
 //Parameters for Camera
-var cx = -40.0;
-var cy = 25.0;
-var cz = 0.0;
-var elevation = -20.0;
-var angle = 90.0;
-var roll = 0.01;
+let cx = -40.0;
+let cy = 25.0;
+let cz = 0.0;
+let elevation = -20.0;
+let angle = 90.0;
+let roll = 0.01;
 
 //object used to store model data after being loaded
-var loadedModelData = function(vao,indicesLength,textures) {
+let loadedModelData = function(vao,indicesLength,textures) {
   this.vao = vao;
   this.indicesLength = indicesLength;
   this.textures = textures;
 };
 
 //---------3D Models declarations---------------
-var bedModel;
-var bedModelStr = 'models/bed/bed.json';
-var bedModelTexture = 'models/bed/bed_d.png';
+let bedModel;
+let bedModelStr = 'models/bed/bed.json';
+let bedModelTexture = 'models/bed/bed_d.png';
 
-var chairModel;
-var chairModelStr = 'models/chair/chair.json';
-var chairModelTexture = 'models/chair/chair.png';
+let chairModel;
+let chairModelStr = 'models/chair/chair.json';
+let chairModelTexture = 'models/chair/chair.png';
 
-var closetModel;
-var closetModelStr = 'models/closet/closet.json';
-var closetModelTexture = 'models/closet/closet.png';
+let closetModel;
+let closetModelStr = 'models/closet/closet.json';
+let closetModelTexture = 'models/closet/closet.png';
 
-var sofaModel;
-var sofaModelStr = 'models/sofa/sofa.json';
-var sofaModelTexture1 = 'models/sofa/verde.jpg';
-var sofaModelTexture2 = 'models/sofa/url.jpg';
-var sofaModelTexture3 = 'models/sofa/bianco.jpg';
-var sofaModelTexture4 = 'models/sofa/TEXT_MDF.jpg';
+let sofaModel;
+let sofaModelStr = 'models/sofa/sofa.json';
+let sofaModelTexture1 = 'models/sofa/verde.jpg';
+let sofaModelTexture2 = 'models/sofa/url.jpg';
+let sofaModelTexture3 = 'models/sofa/bianco.jpg';
+let sofaModelTexture4 = 'models/sofa/TEXT_MDF.jpg';
 
-var sofa2Model;
-var sofa2ModelStr = 'models/sofa2/sofa2.json';
-var sofa2ModelTexture = 'models/sofa2/mufiber03.png';
+let sofa2Model;
+let sofa2ModelStr = 'models/sofa2/sofa2.json';
+let sofa2ModelTexture = 'models/sofa2/mufiber03.png';
 
 
-var tableModel;
-var tableModelStr = 'models/table/wooden-coffe-table.json';
-var tableModelTexture = 'models/table/wooden-coffe-table.jpg';
+let tableModel;
+let tableModelStr = 'models/table/wooden-coffe-table.json';
+let tableModelTexture = 'models/table/wooden-coffe-table.jpg';
 
-var wallModel;
-var wallModelStr = 'models/empty_room/EmptyRoom.json';
-var wallModelTexture = 'models/empty_room/Wall.jpg';
-var floorModelTexture = 'models/empty_room/Floor.jpg'
+let wallModel;
+let wallModelStr = 'models/empty_room/EmptyRoom.json';
+let wallModelTexture = 'models/empty_room/Wall.jpg';
+let floorModelTexture = 'models/empty_room/Floor.jpg'
 
 //TODO for each 3d model
 //...
@@ -66,7 +66,7 @@ var floorModelTexture = 'models/empty_room/Floor.jpg'
 function main() {
 
   //Setting up mouse events
-  var canvas = document.getElementById("c");
+  let canvas = document.getElementById("c");
   canvas.addEventListener("mousedown", doMouseDown, false);
   canvas.addEventListener("mouseup", doMouseUp, false);
   canvas.addEventListener("mousemove", doMouseMove, false);
@@ -77,11 +77,11 @@ function main() {
   window.addEventListener("keydown", keyFunctionDown, false);
 
   //Setting up lights
-  var dirLightAlpha = -utils.degToRad(60);
-  var dirLightBeta  = -utils.degToRad(120);
-  var directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
+  let dirLightAlpha = -utils.degToRad(60);
+  let dirLightBeta  = -utils.degToRad(120);
+  let directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
               Math.sin(dirLightAlpha), Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
-  var directionalLightColor = [1.0, 1.0, 1.0];
+  let directionalLightColor = [1.0, 1.0, 1.0];
 
 
   //SET Global states (viewport size, viewport background color, Depth test)
@@ -91,27 +91,27 @@ function main() {
   gl.enable(gl.DEPTH_TEST);
 
   //get uniforms from shaders
-  var matrixLocation = gl.getUniformLocation(program, "matrix");
-  var materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
-  var lightDirectionHandle = gl.getUniformLocation(program, 'lightDirection');
-  var lightColorHandle = gl.getUniformLocation(program, 'lightColor');
-  var normalMatrixPositionHandle = gl.getUniformLocation(program, 'nMatrix');
+  let matrixLocation = gl.getUniformLocation(program, "matrix");
+  let materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
+  let lightDirectionHandle = gl.getUniformLocation(program, 'lightDirection');
+  let lightColorHandle = gl.getUniformLocation(program, 'lightColor');
+  let normalMatrixPositionHandle = gl.getUniformLocation(program, 'nMatrix');
 
   //uniform for textures location
-  var textLocation = gl.getUniformLocation(program, "u_texture");
+  let textLocation = gl.getUniformLocation(program, "u_texture");
 
 
   //-----------------loading models--------------------
-  var bed = loadModel(bedModel,[bedModelTexture]);
-  var chair = loadModel(chairModel,[chairModelTexture]);
-  var closet = loadModel(closetModel,[closetModelTexture]);
-  var sofa = loadModel(sofaModel,[sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]); //Actually this is a 3d pallet model with a sofa texture
-  var sofa2 = loadModel(sofa2Model,[sofa2ModelTexture, sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]);
+  let bed = loaders.loadModel(gl, program, bedModel,[bedModelTexture]);
+  let chair = loaders.loadModel(gl, program, chairModel,[chairModelTexture]);
+  let closet = loaders.loadModel(gl, program, closetModel,[closetModelTexture]);
+  let sofa = loaders.loadModel(gl, program, sofaModel,[sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]); //Actually this is a 3d pallet model with a sofa texture
+  let sofa2 = loaders.loadModel(gl, program, sofa2Model,[sofa2ModelTexture, sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]);
 
 
-  //var table = loadModel(tableModel, [tableModelTexture])
-  var wall = loadModel(wallModel, [wallModelTexture])
-  var floor = loadModel(wallModel, [floorModelTexture])
+  //let table = loadModel(tableModel, [tableModelTexture])
+  let wall = loaders.loadModel(gl, program, wallModel, [wallModelTexture])
+  let floor = loaders.loadModel(gl, program, wallModel, [floorModelTexture])
   //TODO for each furniture model
   //....
   //---------------------------------------------------
@@ -307,8 +307,22 @@ function main() {
     },*/
   ]
 
-  setGraph = (items, rootNode) => {
+  //-------------Define the scene Graph----------------
 
+  let roomNode = new Node ();
+  roomNode.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [1,1,1]);
+  roomNode.drawInfo = {
+    materialColor: [1.0,1.0,1.0],
+    programInfo: program,
+    bufferLength: indexData.length,
+    vertexArray: bed.vao,
+    indicesLength: bed.indicesLength,
+    textures: bed.textures,
+  };
+
+  objects.push(roomNode);
+
+  const setGraph = (items, rootNode, list) => {
     items.forEach(item => {
 
       let itemNode = new Node();
@@ -340,27 +354,11 @@ function main() {
       itemBody.setParent(itemNode);
       itemNode.setParent(rootNode);
 
-      objects.push(itemBody);
+      list.push(itemBody);
 
     })
   }
-
-  //-------------Define the scene Graph----------------
-
-  var roomNode = new Node ();
-  roomNode.localMatrix = getLocalMatrix([0.0,0.0,0.0],[0.0,0.0,0.0], [1,1,1]);
-  roomNode.drawInfo = {
-    materialColor: [1.0,1.0,1.0],
-    programInfo: program,
-    bufferLength: indexData.length,
-    vertexArray: bed.vao,
-    indicesLength: bed.indicesLength,
-    textures: bed.textures,
-  };
-
-  objects.push(roomNode);
-
-  setGraph(items, roomNode)
+  setGraph(items, roomNode, objects)
   //---------------SceneGraph defined-------------------
 
   requestAnimationFrame(drawScene);
@@ -373,7 +371,7 @@ function main() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     //compute aspect ratio
-    var aspect = gl.canvas.width / gl.canvas.height;
+    let aspect = gl.canvas.width / gl.canvas.height;
 
     //compute new camera position
     if(movingRight) moveCameraRight();
@@ -396,9 +394,9 @@ function main() {
 
       perspectiveMatrix = utils.MakePerspective(60,aspect,1.0,2000.0);
 
-      var projectionMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);
+      let projectionMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);
       projectionMatrix = utils.multiplyMatrices(perspectiveMatrix,projectionMatrix);
-      var normalMatrix = utils.invertMatrix(utils.transposeMatrix(object.worldMatrix));
+      let normalMatrix = utils.invertMatrix(utils.transposeMatrix(object.worldMatrix));
 
       gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
       gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
@@ -420,13 +418,13 @@ function main() {
 }
 
 async function init(){
-    var path = window.location.pathname;
-    var page = path.split("/").pop();
+    let path = window.location.pathname;
+    let page = path.split("/").pop();
     baseDir = window.location.href.replace(page, '');
     console.log("basedir = " + baseDir);
     shaderDir = baseDir+"shaders/";
 
-      var canvas = document.getElementById("c");
+      let canvas = document.getElementById("c");
       gl = canvas.getContext("webgl2");
       if (!gl) {
         document.write("GL context not opened");
@@ -437,8 +435,8 @@ async function init(){
       await utils.loadFiles([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'], function (shaderText) {
         console.log(shaderText[0]);
         console.log(shaderText[1]);
-      var vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
-      var fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
+      let vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
+      let fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);
 
       program = utils.createProgram(gl, vertexShader, fragmentShader);
     });
@@ -446,7 +444,7 @@ async function init(){
   gl.useProgram(program);
 
   //################################# Load Models #####################################
-  //This loads the json model in the models variables previously declared
+  //This loads the json model in the models letiables previously declared
 
   //JSON models
   await utils.get_json(bedModelStr, function(loadedModel){bedModel = loadedModel;});
@@ -462,7 +460,7 @@ async function init(){
 
 
   //Obj models
-  /*var tableObjStr = await utils.get_objstr(baseDir+ tableModelStr);
+  /*let tableObjStr = await utils.get_objstr(baseDir+ tableModelStr);
   tableModel = new OBJ.Mesh(tableObjStr);*/
   //...
 
@@ -475,102 +473,20 @@ async function init(){
 
 window.onload = init();
 
-/**function that loads a 3D model and its texture*/
-function loadModel(model, modelTextures){
-
-  //get uniforms from shaders
-  var positionAttributeLocation = gl.getAttribLocation(program, "inPosition");
-  var normalAttributeLocation = gl.getAttribLocation(program, "inNormal");
-  var uvAttributeLocation = gl.getAttribLocation(program, "a_uv");
-
-  var vao = gl.createVertexArray();
-  gl.bindVertexArray(vao);
-
-  //Here we extract the position of the vertices, the normals, the indices, and the uv coordinates
-  var vertices, normals, indices, texCoords;
-  if(model.meshes == null){
-    //Obj model
-    vertices = model.vertices;
-    normals = model.normals;
-    indices = model.indices;
-    texCoords = model.textures;
-  }
-  else {
-    //Json model
-    console.log(model);
-    vertices = model.meshes[0].vertices;
-    normals = model.meshes[0].normals;
-    indices = [].concat.apply([], model.meshes[0].faces);
-    texCoords = (model.meshes[0].texturecoords!=null)?model.meshes[0].texturecoords[0]:null;
-  }
-
-  gl.bindVertexArray(vao);
-  var positionBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(positionAttributeLocation);
-  gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-
-  var normalBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normals), gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(normalAttributeLocation);
-  gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 0, 0);
-
-  if(texCoords!=null){
-    var uvBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, uvBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoords), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(uvAttributeLocation);
-    gl.vertexAttribPointer(uvAttributeLocation, 2, gl.FLOAT, false, 0, 0);
-  }
-
-  var indexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-
-  var textures = [];
-  modelTextures.forEach((texture) => {
-    textures.push(loadTexture(texture));
-  });
-
-  return new loadedModelData(vao,indices.length, textures);
-
-}
-
-/**Function used to load a texture*/
-function loadTexture(modelTexture){
-  var texture = gl.createTexture();
-  gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-
-  var image = new Image();
-  image.src = baseDir+modelTexture;
-  image.onload= function() {
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.generateMipmap(gl.TEXTURE_2D);
-  };
-  return texture;
-}
-
 function getLocalMatrix(position,rotation,scale){
   let matricesList = [
       utils.MakeScaleMatrix(scale[0],scale[1],scale[2]),
       utils.MakeRotateXMatrix(rotation[0]),
       utils.MakeRotateYMatrix(rotation[1]),
       utils.MakeRotateZMatrix(rotation[2]),
-      utils.MakeTranslateMatrix(position[0],position[1],position[2])
+      utils.MakeTranslateMatrix(position[0],position[1],position[2]),
   ];
   return utils.multiplyListOfMatrices(matricesList);
 }
 
 //----------------------------Mouse events functions-------------------------------------------
-var mouseState = false;
-var lastMouseX = -100, lastMouseY = -100;
+let mouseState = false;
+let lastMouseX = -100, lastMouseY = -100;
 const maxElevation = 60;  //max angle for elevation (to limit vertical camera rotations)
 function doMouseDown(event) {
   lastMouseX = event.pageX;
@@ -584,8 +500,8 @@ function doMouseUp(event) {
 }
 function doMouseMove(event) {
   if(mouseState) {
-    var dx = event.pageX - lastMouseX;
-    var dy = lastMouseY - event.pageY;
+    let dx = event.pageX - lastMouseX;
+    let dy = lastMouseY - event.pageY;
     lastMouseX = event.pageX;
     lastMouseY = event.pageY;
 
@@ -598,9 +514,9 @@ function doMouseMove(event) {
 //------------------------------------------------------------------------------------------------
 
 //-------------------------------------Input keys-------------------------------------------------
-var keys = [];
+let keys = [];
 
-var keyFunctionDown =function(e) {
+let keyFunctionDown =function(e) {
   if(!keys[e.keyCode]) {
     keys[e.keyCode] = true;
     switch(e.keyCode) {
@@ -641,7 +557,7 @@ var keyFunctionDown =function(e) {
 //console.log(e.keyCode);
 };
 
-var keyFunctionUp =function(e) {
+let keyFunctionUp =function(e) {
   if(keys[e.keyCode]) {
     keys[e.keyCode] = false;
     switch(e.keyCode) {
@@ -685,11 +601,11 @@ var keyFunctionUp =function(e) {
 //-------------------------------------------------------------------------------------------------
 
 //--------------------------First person camera movements------------------------------------------
-var velocity = 0.3;
-var movingRight = false;
-var movingLeft = false;
-var movingForward = false;
-var movingBackward = false;
+let velocity = 0.3;
+let movingRight = false;
+let movingLeft = false;
+let movingForward = false;
+let movingBackward = false;
 
 function moveCameraForward(){
   //console.log("direction = " +  angle);
@@ -714,100 +630,3 @@ function moveCameraBackward(){
   cz= cz - Math.cos(utils.degToRad(angle+180))*velocity;
   cx= cx + Math.sin(utils.degToRad(angle+180))*velocity;
 }
-
-//---------------------------------------------------------------------------------------------------------
-
-//-----------------------------------Raycast---------------------------------------------------------------
-
-
-function raySphereIntersection(rayStartPoint, rayNormalisedDir, sphereCentre, sphereRadius){
-  //Distance between sphere origin and origin of ray
-  var l = [sphereCentre[0] - rayStartPoint[0], sphereCentre[1] - rayStartPoint[1], sphereCentre[2] - rayStartPoint[2]];
-  var l_squared = l[0] * l[0] + l[1] * l[1] + l[2] * l[2];
-  //If this is true, the ray origin is inside the sphere so it collides with the sphere
-  if(l_squared < (sphereRadius*sphereRadius)){
-      console.log("ray origin inside sphere");
-      return true;
-  }
-  //Projection of l onto the ray direction
-  var s = l[0] * rayNormalisedDir[0] + l[1] * rayNormalisedDir[1] + l[2] * rayNormalisedDir[2];
-  //The spere is behind the ray origin so no intersection
-  if(s < 0){
-      console.log("sphere behind ray origin");
-      return false;
-  }
-  //Squared distance from sphere centre and projection s with Pythagorean theorem
-  var m_squared = l_squared - (s*s);
-  //If this is true the ray will miss the sphere
-  if(m_squared > (sphereRadius*sphereRadius)){
-      console.log("m squared > r squared");
-      return false;
-  }
-  //Now we can say that the ray will hit the sphere
-  console.log("hit");
-  return true;
-
-}
-
-function myOnMouseUp(ev){
-  //These commented lines of code only work if the canvas is full screen
-  /*console.log("ClientX "+ev.clientX+" ClientY "+ev.clientY);
-  var normX = (2*ev.clientX)/ gl.canvas.width - 1;
-  var normY = 1 - (2*ev.clientY) / gl.canvas.height;
-  console.log("NormX "+normX+" NormY "+normY);*/
-
-  //This is a way of calculating the coordinates of the click in the canvas taking into account its possible displacement in the page
-  var top = 0.0, left = 0.0;
-  canvas = gl.canvas;
-  while (canvas && canvas.tagName !== 'BODY') {
-      top += canvas.offsetTop;
-      left += canvas.offsetLeft;
-      canvas = canvas.offsetParent;
-  }
-  console.log("left "+left+" top "+top);
-  var x = ev.clientX - left;
-  var y = ev.clientY - top;
-
-  //Here we calculate the normalised device coordinates from the pixel coordinates of the canvas
-  //console.log("ClientX "+x+" ClientY "+y);
-  var normX = (2*x)/ gl.canvas.width - 1;
-  var normY = 1 - (2*y) / gl.canvas.height;
-  //console.log("NormX "+normX+" NormY "+normY);
-
-  //We need to go through the transformation pipeline in the inverse order so we invert the matrices
-  var projInv = utils.invertMatrix(perspectiveMatrix);
-  var viewInv = utils.invertMatrix(viewMatrix);
-
-  //Find the point (un)projected on the near plane, from clip space coords to eye coords
-  //z = -1 makes it so the point is on the near plane
-  //w = 1 is for the homogeneous coordinates in clip space
-  var pointEyeCoords = utils.multiplyMatrixVector(projInv, [normX, normY, -1, 1]);
-  //console.log("Point eye coords "+pointEyeCoords);
-
-  //This finds the direction of the ray in eye space
-  //Formally, to calculate the direction you would do dir = point - eyePos but since we are in eye space eyePos = [0,0,0]
-  //w = 0 is because this is not a point anymore but is considered as a direction
-  var rayEyeCoords = [pointEyeCoords[0], pointEyeCoords[1], pointEyeCoords[2], 0];
-
-
-  //We find the direction expressed in world coordinates by multipling with the inverse of the view matrix
-  var rayDir = utils.multiplyMatrixVector(viewInv, rayEyeCoords);
-  //console.log("Ray direction "+rayDir);
-  var normalisedRayDir = utils.normalize(rayDir);
-  //console.log("normalised ray dir "+normalisedRayDir);
-  //The ray starts from the camera in world coordinates
-  var rayStartPoint = [cx, cy, cz];
-
-  //We iterate on all the objects in the scene to check for collisions
-  for(let i = 1; i < objects.length; i++){
-      let collider = objects[i].parent.collider
-      let hit = raySphereIntersection(rayStartPoint, normalisedRayDir, collider[0], collider[1]);
-      if (hit) {
-          console.log("hit sphere number "+i);
-          colours[i] = [Math.random(), Math.random(), Math.random(), 1];
-      }
-  }
-}
-
-
-window.addEventListener("mouseup", myOnMouseUp);

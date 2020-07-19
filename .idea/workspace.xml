@@ -20,16 +20,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="added room (missing texture and lights)">
+      <change afterPath="$PROJECT_DIR$/utils/loaders.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/raycast.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shapesDefinition.js" beforeDir="false" afterPath="$PROJECT_DIR$/shapesDefinition.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/sceneGraphUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/sceneGraphUtils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webgl-obj-loader.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/webgl-obj-loader.min.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
   </component>
   <component name="ProjectId" id="1ek6nCw3NjYLavpBXZYser2A10n" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -62,6 +82,7 @@
       <workItem from="1594853408823" duration="822000" />
       <workItem from="1594829735382" duration="11516000" />
       <workItem from="1595110092661" duration="6246000" />
+      <workItem from="1595121131980" duration="1018000" />
     </task>
     <task id="LOCAL-00001" summary="added wall, no texture? Good setGraph function needed">
       <created>1594858632163</created>
@@ -109,6 +130,10 @@
     <option name="LAST_COMMIT_MESSAGE" value="added room (missing texture and lights)" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="634" y="285" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1595121482724">
+      <screen x="0" y="23" width="1792" height="1017" />
+    </state>
+    <state x="634" y="285" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1792.1017@0.23.1792.1017" timestamp="1595121482724" />
     <state x="179" y="114" key="MergeDialog" timestamp="1594855389093">
       <screen x="0" y="23" width="1792" height="1017" />
     </state>
@@ -122,10 +147,23 @@
     </state>
     <state x="496" y="271" key="Vcs.Push.Dialog.v2/0.23.1792.1017@0.23.1792.1017" timestamp="1594861527133" />
     <state x="496" y="273" key="Vcs.Push.Dialog.v2/0.23.1792.1026@0.23.1792.1026" timestamp="1595115145095" />
+    <state x="200" y="149" width="1592" height="817" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1595122151939">
+      <screen x="0" y="23" width="1792" height="1017" />
+    </state>
+    <state x="200" y="149" width="1592" height="817" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.23.1792.1017@0.23.1792.1017" timestamp="1595122151939" />
+    <state x="100" y="123" width="1592" height="817" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1595121847936">
+      <screen x="0" y="23" width="1792" height="1017" />
+    </state>
+    <state x="100" y="123" width="1592" height="817" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1792.1017@0.23.1792.1017" timestamp="1595121847936" />
     <state x="684" y="452" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595112938421">
       <screen x="0" y="23" width="1792" height="1017" />
     </state>
     <state x="684" y="452" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1792.1017@0.23.1792.1017" timestamp="1595112938421" />
+    <state x="597" y="256" width="891" height="548" key="find.popup" timestamp="1595122148240">
+      <screen x="0" y="23" width="1792" height="1017" />
+    </state>
+    <state x="597" y="256" width="891" height="548" key="find.popup/0.23.1792.1017@0.23.1792.1017" timestamp="1595122148240" />
+    <state x="597" y="257" width="891" height="548" key="find.popup/0.23.1792.1020@0.23.1792.1020" timestamp="1595120763876" />
     <state x="561" y="248" width="670" height="676" key="search.everywhere.popup" timestamp="1594859892343">
       <screen x="0" y="23" width="1792" height="1017" />
     </state>

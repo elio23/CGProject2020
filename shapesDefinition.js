@@ -1,6 +1,6 @@
 //3D cube vertex coordinates and indices
 
-var vertices = [					// Vertex #:
+let vertices = [					// Vertex #:
 	 1.0, 1.0,-1.0, 	//  0
 	 1.0,-1.0,-1.0,  //  1
 	-1.0, 1.0,-1.0,  //  2
@@ -27,7 +27,7 @@ var vertices = [					// Vertex #:
 	-1.0, 1.0,-1.0   // 23
 ];
 
-var indices = [ 	// Face #:
+let indices = [ 	// Face #:
 	  0,  1,  2,	//  0
 	  1, 18,  2,    //  1
 	  3,  4,  5,    //  2
@@ -42,7 +42,7 @@ var indices = [ 	// Face #:
 	 16, 23, 17     // 11
 ];
 
-var normals = [					// Color #:
+let normals = [					// Color #:
 	 0.0, 0.0,-1.0, 	//  0
 	 0.0, 0.0,-1.0,  //  1
 	 0.0, 0.0,-1.0,  //  2
@@ -68,11 +68,11 @@ var normals = [					// Color #:
 	-1.0, 0.0, 0.0,  // 22
 	 0.0, 1.0, 0.0   // 23
 ];
-	  
 
-var vertexPositionData =[] ;
-var normalData =[];
-var indexData =[];
+
+let vertexPositionData =[] ;
+let normalData =[];
+let indexData =[];
 
 function initSphere() {
   let latitudeBands = 10;
