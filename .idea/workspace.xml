@@ -19,16 +19,13 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="added room (missing texture and lights)">
-      <change afterPath="$PROJECT_DIR$/utils/loaders.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/raycast.js" afterDir="false" />
+    <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="bunch of refactor...">
+      <change afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/events.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shapesDefinition.js" beforeDir="false" afterPath="$PROJECT_DIR$/shapesDefinition.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/sceneGraphUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/sceneGraphUtils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webgl-obj-loader.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/webgl-obj-loader.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/raycast.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/raycast.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +79,8 @@
       <workItem from="1594853408823" duration="822000" />
       <workItem from="1594829735382" duration="11516000" />
       <workItem from="1595110092661" duration="6246000" />
-      <workItem from="1595121131980" duration="1018000" />
+      <workItem from="1595121131980" duration="1401000" />
+      <workItem from="1595122595871" duration="3035000" />
     </task>
     <task id="LOCAL-00001" summary="added wall, no texture? Good setGraph function needed">
       <created>1594858632163</created>
@@ -105,7 +103,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595115140695</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="bunch of refactor...">
+      <created>1595122187360</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1595122187360</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -127,7 +132,8 @@
     <MESSAGE value="added wall, no texture? Good setGraph function needed" />
     <MESSAGE value="Added setGraph function" />
     <MESSAGE value="added room (missing texture and lights)" />
-    <option name="LAST_COMMIT_MESSAGE" value="added room (missing texture and lights)" />
+    <MESSAGE value="bunch of refactor..." />
+    <option name="LAST_COMMIT_MESSAGE" value="bunch of refactor..." />
   </component>
   <component name="WindowStateProjectService">
     <state x="634" y="285" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1595121482724">
@@ -142,10 +148,10 @@
       <screen x="0" y="23" width="1792" height="1017" />
     </state>
     <state x="397" y="170" key="SettingsEditor/0.23.1792.1017@0.23.1792.1017" timestamp="1594853707238" />
-    <state x="496" y="273" key="Vcs.Push.Dialog.v2" timestamp="1595115145095">
-      <screen x="0" y="23" width="1792" height="1026" />
+    <state x="496" y="271" key="Vcs.Push.Dialog.v2" timestamp="1595122188923">
+      <screen x="0" y="23" width="1792" height="1017" />
     </state>
-    <state x="496" y="271" key="Vcs.Push.Dialog.v2/0.23.1792.1017@0.23.1792.1017" timestamp="1594861527133" />
+    <state x="496" y="271" key="Vcs.Push.Dialog.v2/0.23.1792.1017@0.23.1792.1017" timestamp="1595122188923" />
     <state x="496" y="273" key="Vcs.Push.Dialog.v2/0.23.1792.1026@0.23.1792.1026" timestamp="1595115145095" />
     <state x="200" y="149" width="1592" height="817" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1595122151939">
       <screen x="0" y="23" width="1792" height="1017" />

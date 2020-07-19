@@ -22,7 +22,7 @@ function raySphereIntersection(rayStartPoint, rayNormalisedDir, sphereCentre, sp
 
 function raycastMouseUp(ev){
     let top = 0.0, left = 0.0;
-    canvas = gl.canvas;
+    let canvas = gl.canvas;
     while (canvas && canvas.tagName !== 'BODY') {
         top += canvas.offsetTop;
         left += canvas.offsetLeft;
@@ -54,6 +54,3 @@ function raycastMouseUp(ev){
         }
     }
 }
-
-
-window.addEventListener("mouseup", raycastMouseUp);
