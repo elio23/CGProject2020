@@ -108,6 +108,7 @@ function main() {
   var sofa = loadModel(sofaModel,[sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]); //Actually this is a 3d pallet model with a sofa texture
   var sofa2 = loadModel(sofa2Model,[sofa2ModelTexture, sofaModelTexture1, sofaModelTexture2, sofaModelTexture3, sofaModelTexture4]);
 
+
   //var table = loadModel(tableModel, [tableModelTexture])
   var wall = loadModel(wallModel, [wallModelTexture])
   var floor = loadModel(wallModel, [floorModelTexture])
@@ -455,6 +456,8 @@ async function init(){
   await utils.get_json(sofa2ModelStr, function(loadedModel){sofa2Model = loadedModel;});
   //await utils.get_json(tableModelStr, function(loadedModel){tableModel = loadedModel;});
   await utils.get_json(wallModelStr, function(loadedModel){wallModel = loadedModel;});
+  //await utils.get_json(sofa3ModelStr, function(loadedModel){sofa3Model = loadedModel;});
+
 
 
 

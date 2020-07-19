@@ -19,8 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="Added setGraph function">
-      <change beforePath="$PROJECT_DIR$/._index.html" beforeDir="false" />
+    <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="added room (missing texture and lights)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
     </list>
@@ -46,6 +45,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/models" />
       <recent name="$PROJECT_DIR$/utils" />
     </key>
   </component>
@@ -61,7 +61,7 @@
       <updated>1594853407204</updated>
       <workItem from="1594853408823" duration="822000" />
       <workItem from="1594829735382" duration="11516000" />
-      <workItem from="1595110092661" duration="4522000" />
+      <workItem from="1595110092661" duration="6246000" />
     </task>
     <task id="LOCAL-00001" summary="added wall, no texture? Good setGraph function needed">
       <created>1594858632163</created>
@@ -77,7 +77,14 @@
       <option name="project" value="LOCAL" />
       <updated>1594861525312</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added room (missing texture and lights)">
+      <created>1595115140695</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1595115140695</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -98,7 +105,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="added wall, no texture? Good setGraph function needed" />
     <MESSAGE value="Added setGraph function" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added setGraph function" />
+    <MESSAGE value="added room (missing texture and lights)" />
+    <option name="LAST_COMMIT_MESSAGE" value="added room (missing texture and lights)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="179" y="114" key="MergeDialog" timestamp="1594855389093">
@@ -109,10 +117,11 @@
       <screen x="0" y="23" width="1792" height="1017" />
     </state>
     <state x="397" y="170" key="SettingsEditor/0.23.1792.1017@0.23.1792.1017" timestamp="1594853707238" />
-    <state x="496" y="271" key="Vcs.Push.Dialog.v2" timestamp="1594861527133">
-      <screen x="0" y="23" width="1792" height="1017" />
+    <state x="496" y="273" key="Vcs.Push.Dialog.v2" timestamp="1595115145095">
+      <screen x="0" y="23" width="1792" height="1026" />
     </state>
     <state x="496" y="271" key="Vcs.Push.Dialog.v2/0.23.1792.1017@0.23.1792.1017" timestamp="1594861527133" />
+    <state x="496" y="273" key="Vcs.Push.Dialog.v2/0.23.1792.1026@0.23.1792.1026" timestamp="1595115145095" />
     <state x="684" y="452" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1595112938421">
       <screen x="0" y="23" width="1792" height="1017" />
     </state>
