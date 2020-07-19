@@ -19,13 +19,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="bunch of refactor...">
-      <change afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/events.js" afterDir="false" />
+    <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="super refactor (800+ lines to 232 lines)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/raycast.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/raycast.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +76,7 @@
       <workItem from="1594829735382" duration="11516000" />
       <workItem from="1595110092661" duration="6246000" />
       <workItem from="1595121131980" duration="1401000" />
-      <workItem from="1595122595871" duration="3035000" />
+      <workItem from="1595122595871" duration="3397000" />
     </task>
     <task id="LOCAL-00001" summary="added wall, no texture? Good setGraph function needed">
       <created>1594858632163</created>
@@ -110,7 +106,14 @@
       <option name="project" value="LOCAL" />
       <updated>1595122187360</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="super refactor (800+ lines to 232 lines)">
+      <created>1595125755438</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1595125755438</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,7 +136,8 @@
     <MESSAGE value="Added setGraph function" />
     <MESSAGE value="added room (missing texture and lights)" />
     <MESSAGE value="bunch of refactor..." />
-    <option name="LAST_COMMIT_MESSAGE" value="bunch of refactor..." />
+    <MESSAGE value="super refactor (800+ lines to 232 lines)" />
+    <option name="LAST_COMMIT_MESSAGE" value="super refactor (800+ lines to 232 lines)" />
   </component>
   <component name="WindowStateProjectService">
     <state x="634" y="285" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1595121482724">
@@ -148,10 +152,11 @@
       <screen x="0" y="23" width="1792" height="1017" />
     </state>
     <state x="397" y="170" key="SettingsEditor/0.23.1792.1017@0.23.1792.1017" timestamp="1594853707238" />
-    <state x="496" y="271" key="Vcs.Push.Dialog.v2" timestamp="1595122188923">
-      <screen x="0" y="23" width="1792" height="1017" />
+    <state x="496" y="272" key="Vcs.Push.Dialog.v2" timestamp="1595125756911">
+      <screen x="0" y="23" width="1792" height="1020" />
     </state>
     <state x="496" y="271" key="Vcs.Push.Dialog.v2/0.23.1792.1017@0.23.1792.1017" timestamp="1595122188923" />
+    <state x="496" y="272" key="Vcs.Push.Dialog.v2/0.23.1792.1020@0.23.1792.1020" timestamp="1595125756911" />
     <state x="496" y="273" key="Vcs.Push.Dialog.v2/0.23.1792.1026@0.23.1792.1026" timestamp="1595115145095" />
     <state x="200" y="149" width="1592" height="817" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1595122151939">
       <screen x="0" y="23" width="1792" height="1017" />

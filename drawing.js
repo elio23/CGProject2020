@@ -65,11 +65,11 @@ function main() {
 
     //Solved in one cycle, no more referencing to variable names, but Object fields...
     Object.keys(models).forEach(k => {
-        models[k].modelData = loaders.loadModel(gl, program, models[k].model, models[k].modelTextures)
+        models[k].model = loaders.loadModel(gl, program, models[k].data, models[k].modelTextures)
     })
 
     // ...Apart from this, used for roomNode
-    let bed = loaders.loadModel(gl, program, models["bed"].model, models["bed"].modelTextures);
+    let bed = loaders.loadModel(gl, program, models["bed"].data, models["bed"].modelTextures);
 
     //-------------Define the scene Graph----------------
 
@@ -92,7 +92,7 @@ function main() {
             let itemNode = new Node();
             let itemBody = new Node();
 
-            let model = models[item.model].modelData
+            let model = models[item.model].model
 
             itemNode.localMatrix = getLocalMatrix(
                 item.parent.position,
@@ -210,8 +210,8 @@ async function init() {
     gl.useProgram(program);
 
     for (const k of Object.keys(models)) {
-        await utils.get_json(models[k].modelStr, (loaded) => {
-            models[k].model = loaded;
+        await utils.get_json(models[k].modelStr, (data) => {
+            models[k].data = data;
         })
     }
 
