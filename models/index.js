@@ -52,7 +52,7 @@ const models = {
 const items = [
     {
         parent: {
-            position: [-9, -0.5, -61],
+            position: [-9, -0.4, -61],
         },
         body: {
             position: [0, 0, 0],
@@ -63,7 +63,7 @@ const items = [
     },
     {
         parent: {
-            position: [66, -1.0, -61.5],
+            position: [66, -1.0, -61.53],
         },
         body: {
             position: [0, 0, 0],
@@ -74,7 +74,7 @@ const items = [
     },
     {
         parent: {
-            position: [-9, -0.5, 89],
+            position: [-9, 0.2, 40],
         },
         body: {
             position: [0, 0, 0],
@@ -85,7 +85,7 @@ const items = [
     },
     {
         parent: {
-            position: [66, -1.0, 89.5],
+            position: [66, -0.2, 39.37],
         },
         body: {
             position: [0, 0, 0],
@@ -96,7 +96,7 @@ const items = [
     },
     {
         parent: {
-            position: [-50, 210, 50],
+            position: [-50, 209.0, 50],
         },
         body: {
             position: [0, 0, 0],
@@ -129,7 +129,7 @@ const items = [
     },
     {
         parent: {
-            position: [60.5, 0.5, 95],
+            position: [60.5, -0.6, 92],
         },
         body: {
             position: [0, 0, 0],
@@ -140,7 +140,7 @@ const items = [
     },
     {
         parent: {
-            position: [60, 0, 20],
+            position: [60, -1.1, 19],
         },
         body: {
             position: [0, 0, 0],
@@ -151,10 +151,10 @@ const items = [
     },
     {
         parent: {
-            position: [-9.0, 0.0, 5.0],
+            position: [-18.0, 0.0, 5.0],
         },
         body: {
-            position: [0.0, 0.1, 0.0],
+            position: [0.0, 0.03, 0.0],
             rotation: [0.0, 0.0, 0.0],
             scale: [8.0, 8.0, 8.0]
         },
@@ -162,10 +162,10 @@ const items = [
     },
     {
         parent: {
-            position: [51.0, 0.0, -10.0],
+            position: [71.0, 0.0, -10.0],
         },
         body: {
-            position: [0.0, -5.0, 0.0],
+            position: [0.0, -2.75, 0.0],
             rotation: [0.0, 180.0, 0.0],
             scale: [1.0, 1.0, 1.0]
         },
@@ -173,7 +173,40 @@ const items = [
     },
     {
         parent: {
-            position: [0.0, 0.0, 30.0],
+            position: [-10.0, 0.0, 60.0],
+        },
+        body: {
+            position: [0.0, 0.0, -1.0],
+            rotation: [0.0, 180.0, 0.0],
+            scale: [12.0, 12.0, 12.0]
+        },
+        model: "sofa2",
+    },
+    {
+        parent: {
+            position: [20.0, 0.0, 60.0],
+        },
+        body: {
+            position: [0.0, 0.0, -1.0],
+            rotation: [0.0, 180.0, 0.0],
+            scale: [12.0, 12.0, 12.0]
+        },
+        model: "sofa2",
+    },
+    {
+        parent: {
+            position: [50.0, 0.0, 60.0],
+        },
+        body: {
+            position: [0.0, 0.0, -1.0],
+            rotation: [0.0, 180.0, 0.0],
+            scale: [12.0, 12.0, 12.0]
+        },
+        model: "sofa2",
+    },
+    {
+        parent: {
+            position: [80.0, 0.0, 60.0],
         },
         body: {
             position: [0.0, 0.0, -1.0],
@@ -187,7 +220,7 @@ const items = [
             position: [1.0, 0.0, -10.0],
         },
         body: {
-            position: [100.0, 0.0, 0.0],
+            position: [100.0, 0.0, 5.0],
             rotation: [-90.0, 0.0, 0.0],
             scale: [0.1, 0.1, 0.1]
         },
@@ -195,10 +228,10 @@ const items = [
     },
     {
         parent: {
-            position: [31.0, 0.0, -10.0],
+            position: [41.0, 0.0, -10.0],
         },
         body: {
-            position: [0.0, 0.62, 0.0],
+            position: [0.0, 0.67, 0.0],
             rotation: [0.0, 180.0, 0.0],
             scale: [27.0, 27.0, 27.0]
         },

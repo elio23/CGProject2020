@@ -75,16 +75,16 @@ function main() {
 
     let roomNode = new Node();
     roomNode.localMatrix = getLocalMatrix([0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [1, 1, 1]);
-    roomNode.drawInfo = {
+    /*roomNode.drawInfo = {
         materialColor: [1.0, 1.0, 1.0],
         programInfo: program,
         bufferLength: indexData.length,
         vertexArray: bed.vao,
         indicesLength: bed.indicesLength,
         textures: bed.textures,
-    };
+    };*/
 
-    objects.push(roomNode);
+    //objects.push(roomNode);
 
     const setGraph = (items, rootNode, list) => {
         items.forEach(item => {
@@ -92,7 +92,7 @@ function main() {
             let itemNode = new Node();
             let itemBody = new Node();
 
-            let model = models[item.model].model
+            let model = models[item.model].model;
 
             itemNode.localMatrix = getLocalMatrix(
                 item.parent.position,
