@@ -107,6 +107,8 @@ function main() {
                 item.body.scale
             );
 
+            var randomDefaultTexture = Math.floor(Math.random()*(model.textures.length-1));
+
             itemBody.drawInfo = {
                 materialColor: [1.0, 1.0, 1.0],
                 programInfo: program,
@@ -114,8 +116,10 @@ function main() {
                 vertexArray: model.vao,
                 indicesLength: model.indicesLength,
                 textures: model.textures,
-                currentTextureIndex: 0, // default texture loaded is the one at index 0 of the textures array
+                currentTextureIndex: randomDefaultTexture, // default texture loaded is randomly chosen
             };
+
+            console.log("current texture index: " + randomDefaultTexture);
 
             itemBody.setParent(itemNode);
             itemNode.setParent(rootNode);
@@ -168,7 +172,7 @@ function main() {
             gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
 
             gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textures[object.drawInfo.currentTextureIndex]); // default texture loaded is the one at index 0 of the textures array
+            gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textures[object.drawInfo.currentTextureIndex]); // default texture is randomly chosen
             gl.uniform1i(textLocation, 0);
 
             gl.uniform3fv(materialDiffColorHandle, object.drawInfo.materialColor);

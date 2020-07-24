@@ -20,7 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="super refactor (800+ lines to 232 lines)">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
@@ -96,7 +95,8 @@
       <workItem from="1595121131980" duration="1401000" />
       <workItem from="1595122595871" duration="3397000" />
       <workItem from="1595272109096" duration="61000" />
-      <workItem from="1595272188599" duration="4713000" />
+      <workItem from="1595272188599" duration="5498000" />
+      <workItem from="1595594351526" duration="2670000" />
     </task>
     <task id="LOCAL-00001" summary="added wall, no texture? Good setGraph function needed">
       <created>1594858632163</created>

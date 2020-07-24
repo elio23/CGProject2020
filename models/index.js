@@ -25,7 +25,11 @@ const models = {
 
     sofa2: {
         modelStr: 'models/sofa2/sofa2.json',
-        modelTextures: ['models/sofa2/mufiber03.png'],
+        modelTextures: ['models/sofa2/mufiber03.png',
+                        'models/sofa/verde.jpg',
+                        'models/sofa/url.jpg',
+                        'models/sofa/bianco.jpg',
+                        'models/sofa/TEXT_MDF.jpg'],
     },
 
     /*table: {
