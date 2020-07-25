@@ -126,7 +126,9 @@ let keyFunctionUp = function (e) {
 };
 
 
-let velocity = 0.3;
+let velocity = 0.5;
+let roomXConstraints =[-44.7,99.25]; //range of camera movement along x axis (it derives from room size)
+let roomZConstraints =[-15.25,79.47];//range of camera movement along y axis (it derives from room size)
 let movingRight = false;
 let movingLeft = false;
 let movingForward = false;
@@ -134,24 +136,50 @@ let movingBackward = false;
 
 function moveCameraForward() {
     //console.log("direction = " +  angle);
-    cz = cz - Math.cos(utils.degToRad(angle)) * velocity;
-    cx = cx + Math.sin(utils.degToRad(angle)) * velocity;
+    //console.log("camera position: " + cx + ", " + cz);
+    var cPos = limitMovementsInsideRoom(
+        cz - Math.cos(utils.degToRad(angle)) * velocity,
+        cx + Math.sin(utils.degToRad(angle)) * velocity);
+    cz = cPos[0];
+    cx = cPos[1];
 }
 
 function moveCameraLeft() {
     //console.log("direction = " +  angle);
-    cz = cz + Math.cos(utils.degToRad(angle + 90)) * velocity;
-    cx = cx - Math.sin(utils.degToRad(angle + 90)) * velocity;
+    //console.log("camera position: " + cx + ", " + cz);
+    var cPos = limitMovementsInsideRoom(
+        cz + Math.cos(utils.degToRad(angle + 90)) * velocity,
+        cx - Math.sin(utils.degToRad(angle + 90)) * velocity);
+    cz = cPos[0];
+    cx = cPos[1];
 }
 
 function moveCameraRight() {
     //console.log("direction = " +  angle);
-    cz = cz + Math.cos(utils.degToRad(angle - 90)) * velocity;
-    cx = cx - Math.sin(utils.degToRad(angle - 90)) * velocity;
+    //console.log("camera position: " + cx + ", " + cz);
+    var cPos = limitMovementsInsideRoom(
+        cz + Math.cos(utils.degToRad(angle - 90)) * velocity,
+        cx - Math.sin(utils.degToRad(angle - 90)) * velocity);
+    cz = cPos[0];
+    cx = cPos[1];
 }
 
 function moveCameraBackward() {
     //console.log("direction = " +  angle);
-    cz = cz - Math.cos(utils.degToRad(angle + 180)) * velocity;
-    cx = cx + Math.sin(utils.degToRad(angle + 180)) * velocity;
+    //console.log("camera position: " + cx + ", " + cz);
+    var cPos = limitMovementsInsideRoom(
+        cz - Math.cos(utils.degToRad(angle + 180)) * velocity,
+        cx + Math.sin(utils.degToRad(angle + 180)) * velocity);
+    cz = cPos[0];
+    cx = cPos[1];
+}
+
+//limit camera movements inside room, it returns the constrained [cz,cx] camera position
+function limitMovementsInsideRoom(cz,cx){
+    var cPos = [cz,cx];
+    if(cz<roomZConstraints[0]) cPos[0] = roomZConstraints[0];
+    else  if (cz>roomZConstraints[1]) cPos[0] = roomZConstraints[1];
+    if(cx<roomXConstraints[0]) cPos[1] = roomXConstraints[0];
+    else  if (cx>roomXConstraints[1]) cPos[1] = roomXConstraints[1];
+    return cPos;
 }

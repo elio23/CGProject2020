@@ -89,7 +89,7 @@ const items = [
     },
     {
         parent: {
-            position: [66, -0.2, 39.37],
+            position: [66, -0.2, 39.48],
         },
         body: {
             position: [0, 0, 0],

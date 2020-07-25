@@ -41,7 +41,7 @@ function main() {
 
     //Setting up lights
     let dirLightAlpha = -utils.degToRad(60);
-    let dirLightBeta = -utils.degToRad(120);
+    let dirLightBeta = -utils.degToRad(0);
     let directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
         Math.sin(dirLightAlpha), Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
     let directionalLightColor = [1.0, 1.0, 1.0];
@@ -179,12 +179,12 @@ function main() {
             gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textures[object.drawInfo.currentTextureIndex]); // default texture is randomly chosen
             gl.uniform1i(textLocation, 0);
 
-            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            /*gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
-            gl.generateMipmap(gl.TEXTURE_2D)
+            gl.generateMipmap(gl.TEXTURE_2D)*/
 
             gl.uniform3fv(materialDiffColorHandle, object.drawInfo.materialColor);
             gl.uniform3fv(lightColorHandle, directionalLightColor);
