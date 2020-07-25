@@ -1,21 +1,20 @@
-function raySphereIntersection(rayStartPoint, rayNormalisedDir, sphereCentre, sphereRadius){
+function raySphereIntersection(rayStartPoint, rayNormalisedDir, sphereCentre, sphereRadius, i){
     let l = [sphereCentre[0] - rayStartPoint[0], sphereCentre[1] - rayStartPoint[1], sphereCentre[2] - rayStartPoint[2]];
     let l_squared = l[0] * l[0] + l[1] * l[1] + l[2] * l[2];
     if(l_squared < (sphereRadius*sphereRadius)){
-        console.log("ray origin inside sphere");
+        console.log("ray origin inside sphere: " + i);
         return true;
     }
     let s = l[0] * rayNormalisedDir[0] + l[1] * rayNormalisedDir[1] + l[2] * rayNormalisedDir[2];
     if(s < 0){
-        console.log("sphere behind ray origin");
+        console.log("sphere behind ray origin: " + i);
         return false;
     }
     let m_squared = l_squared - (s*s);
     if(m_squared > (sphereRadius*sphereRadius)){
-        console.log("m squared > r squared");
+        console.log("m squared > r squared: " + i);
         return false;
     }
-    console.log("hit");
     return true;
 
 }
@@ -47,10 +46,14 @@ function raycastMouseUp(ev){
 
     for(let i = 1; i < objects.length; i++){
         let collider = objects[i].parent.collider
-        let hit = raySphereIntersection(rayStartPoint, normalisedRayDir, collider[0], collider[1]);
+        let hit = raySphereIntersection(rayStartPoint, normalisedRayDir, collider[0], collider[1], i);
         if (hit) {
             console.log("hit sphere number "+i);
-            colours[i] = [Math.random(), Math.random(), Math.random(), 1];
+            console.log(objects[i])
+            //colours[i] = [Math.random(), Math.random(), Math.random(), 1];
+            document.getElementById("selected").innerText = objects[i].parent.label
+        }
+        else {
         }
     }
 }

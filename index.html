@@ -6,29 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>05 - Scene Graph</title>
     <style type="text/css">
-      body {
-        margin: 0;
-        background-color: gray;
-      }
-      canvas {
-        display: block;
-        background-color: white;
-      }
+        body {
+            margin: 0;
+            background-color: gray;
+        }
+
+        canvas {
+            display: block;
+            background-color: white;
+        }
     </style>
 </head>
 
 
 <body>
-  <canvas id="c"></canvas>
-  <script type="text/javascript" src="models/index.js"></script>
-  <script type="text/javascript" src="utils/utils.js"></script>
-  <script type="text/javascript" src="utils/sceneGraphUtils.js"></script>
-  <script type="text/javascript" src="utils/loaders.js"></script>
-  <script type="text/javascript" src="shapesDefinition.js"></script>
-  <script type="text/javascript" src="utils/events.js"></script>
-  <script type="text/javascript" src="drawing.js"></script>
-  <script type="text/javascript" src="webgl-obj-loader.min.js"></script>
-  <script type="text/javascript" src="utils/raycast.js"></script>
+<canvas id="c"></canvas>
+<div id="legend"
+     style="display: none; position: absolute; z-index: 1; left: 40px; top: 400px; width:300px; height:165px; background-color: white; border-style: dashed; border-color: blue; opacity: 0.7; padding: 5px 10px 5px 10px; overflow:auto">
+    <p>Selected: <span id="selected"></span></p>
+    <form>
+        <input type="radio" name="light" id="yesl" onchange="onRadioButtonChange(this.value);" value="1" checked> Option
+        1 <br/>
+        <input type="radio" name="light" onchange="onRadioButtonChange(this.value);" value="2"> Option 2 <br/>
+        <input type="radio" name="light" onchange="onRadioButtonChange(this.value);" value="3"> Option 3 <br/>
+    </form>
+    <p><b> Slider </b></p>
+    <div id="slider1"> 0
+        <input id="slide1" type="range" min="0" max="1" step="0.1" value="0" onchange="onSliderChange(this.value);"/> 1 <br/>
+    </div>
+
+    <p><b> Checkbox </b></p>
+    <input type="checkbox" id="chbx" onclick="onCheckBoxChange(this.checked);"/> Move Lights<br/>
+    <p><b> Drop-down list</b></p>
+
+    <select id="drop-down" name="" onchange="onDropdownChange(this.value);">
+        <option value="1" selected>Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+    </select>
+</div>
+<script type="text/javascript" src="models/index.js"></script>
+<script type="text/javascript" src="utils/utils.js"></script>
+<script type="text/javascript" src="utils/sceneGraphUtils.js"></script>
+<script type="text/javascript" src="utils/loaders.js"></script>
+<script type="text/javascript" src="shapesDefinition.js"></script>
+<script type="text/javascript" src="utils/events.js"></script>
+<script type="text/javascript" src="drawing.js"></script>
+<script type="text/javascript" src="webgl-obj-loader.min.js"></script>
+<script type="text/javascript" src="utils/raycast.js"></script>
 </body>
 
 </html>

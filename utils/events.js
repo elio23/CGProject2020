@@ -2,6 +2,16 @@ let mouseState = false;
 let lastMouseX = -100, lastMouseY = -100;
 const maxElevation = 60;
 
+
+function toggleMenu() {
+    let legend = document.getElementById("legend");
+    if (legend.style.display === "none") {
+        legend.style.display = "block";
+    }
+    else legend.style.display = "none";
+}
+
+
 function doMouseDown(event) {
     lastMouseX = event.pageX;
     lastMouseY = event.pageY;
@@ -65,6 +75,10 @@ let keyFunctionDown = function (e) {
             case 83:
                 //console.log("KeyUp   - Dir DOWN");
                 movingBackward = true;
+                break;
+            case 77:
+                console.log("pressed m")
+                toggleMenu();
                 break;
         }
     }

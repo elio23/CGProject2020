@@ -163,6 +163,7 @@ const items = [
             scale: [8.0, 8.0, 8.0]
         },
         model: "bed",
+        label: "Bed"
     },
     {
         parent: {
@@ -174,6 +175,7 @@ const items = [
             scale: [1.0, 1.0, 1.0]
         },
         model: "sofa",
+        label: "Sofa (?)"
     },
     {
         parent: {
@@ -185,6 +187,7 @@ const items = [
             scale: [12.0, 12.0, 12.0]
         },
         model: "sofa2",
+        label: "Sofa 1"
     },
     {
         parent: {
@@ -196,6 +199,8 @@ const items = [
             scale: [12.0, 12.0, 12.0]
         },
         model: "sofa2",
+        label: "Sofa 2"
+
     },
     {
         parent: {
@@ -207,6 +212,8 @@ const items = [
             scale: [12.0, 12.0, 12.0]
         },
         model: "sofa2",
+        label: "Sofa 3"
+
     },
     {
         parent: {
@@ -218,6 +225,8 @@ const items = [
             scale: [12.0, 12.0, 12.0]
         },
         model: "sofa2",
+        label: "Sofa 4"
+
     },
     {
         parent: {
@@ -229,6 +238,7 @@ const items = [
             scale: [0.1, 0.1, 0.1]
         },
         model: "chair",
+        label: "Chair"
     },
     {
         parent: {
@@ -240,6 +250,7 @@ const items = [
             scale: [27.0, 27.0, 27.0]
         },
         model: "closet",
+        label: "Closet"
     },
 ]
 
