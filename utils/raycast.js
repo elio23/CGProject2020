@@ -46,14 +46,16 @@ function raycastMouseUp(ev){
 
     for(let i = 1; i < objects.length; i++){
         let collider = objects[i].parent.collider
-        let hit = raySphereIntersection(rayStartPoint, normalisedRayDir, collider[0], collider[1], i);
-        if (hit) {
-            console.log("hit sphere number "+i);
-            console.log(objects[i])
-            //colours[i] = [Math.random(), Math.random(), Math.random(), 1];
-            document.getElementById("selected").innerText = objects[i].parent.label
-        }
-        else {
+        if(collider!=null){
+            let hit = raySphereIntersection(rayStartPoint, normalisedRayDir, collider[0], collider[1], i);
+            if (hit) {
+                console.log("hit sphere number "+i);
+                console.log(objects[i])
+                //colours[i] = [Math.random(), Math.random(), Math.random(), 1];
+                document.getElementById("selected").innerText = objects[i].parent.label
+            }
+            else {
+            }
         }
     }
 }

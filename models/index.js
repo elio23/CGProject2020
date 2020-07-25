@@ -162,6 +162,10 @@ const items = [
             rotation: [0.0, 0.0, 0.0],
             scale: [8.0, 8.0, 8.0]
         },
+        collider:{
+            position: [-18.0, 5.0, -5.0],
+            ray:12.5,
+        },
         model: "bed",
         label: "Bed"
     },
@@ -173,6 +177,10 @@ const items = [
             position: [0.0, -2.75, 0.0],
             rotation: [0.0, 180.0, 0.0],
             scale: [1.0, 1.0, 1.0]
+        },
+        collider:{
+            position: [71.0, 0.0, -10.0],
+            ray:7,
         },
         model: "sofa",
         label: "Sofa (?)"
@@ -186,6 +194,10 @@ const items = [
             rotation: [0.0, 180.0, 0.0],
             scale: [12.0, 12.0, 12.0]
         },
+        collider:{
+            position: [-20.0, 5.0, 65.0],
+            ray:10,
+        },
         model: "sofa2",
         label: "Sofa 1"
     },
@@ -197,6 +209,10 @@ const items = [
             position: [0.0, 0.0, -1.0],
             rotation: [0.0, 180.0, 0.0],
             scale: [12.0, 12.0, 12.0]
+        },
+        collider:{
+            position: [10.0, 5.0, 65.0],
+            ray:10,
         },
         model: "sofa2",
         label: "Sofa 2"
@@ -211,6 +227,10 @@ const items = [
             rotation: [0.0, 180.0, 0.0],
             scale: [12.0, 12.0, 12.0]
         },
+        collider:{
+            position: [40.0, 5.0, 65.0],
+            ray:10,
+        },
         model: "sofa2",
         label: "Sofa 3"
 
@@ -223,6 +243,10 @@ const items = [
             position: [0.0, 0.0, -1.0],
             rotation: [0.0, 180.0, 0.0],
             scale: [12.0, 12.0, 12.0]
+        },
+        collider:{
+            position: [70.0, 5.0, 65.0],
+            ray:10,
         },
         model: "sofa2",
         label: "Sofa 4"
@@ -237,6 +261,10 @@ const items = [
             rotation: [-90.0, 0.0, 0.0],
             scale: [0.1, 0.1, 0.1]
         },
+        collider:{
+            position: [10, 5.0, -10.0],
+            ray:7,
+        },
         model: "chair",
         label: "Chair"
     },
@@ -248,6 +276,10 @@ const items = [
             position: [0.0, 0.67, 0.0],
             rotation: [0.0, 180.0, 0.0],
             scale: [27.0, 27.0, 27.0]
+        },
+        collider:{
+            position: [41.0, 15.0, -10.0],
+            ray:12,
         },
         model: "closet",
         label: "Closet"

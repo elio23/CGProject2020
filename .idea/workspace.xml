@@ -23,7 +23,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/events.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/events.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/raycast.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/raycast.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

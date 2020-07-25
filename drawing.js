@@ -101,7 +101,7 @@ function main() {
                 [1.0, 1.0, 1.0]
             );
 
-            itemNode.collider = [position, 7.0]
+            if(item.collider!=null) itemNode.collider = [item.collider.position, item.collider.ray];
             itemNode.label = item.label
 
             itemBody.localMatrix = getLocalMatrix(
