@@ -6,6 +6,7 @@ let program;
 let viewMatrix;
 let perspectiveMatrix;
 
+let aspect;
 
 let objects = [];
 
@@ -47,6 +48,7 @@ function main() {
     let ambientLight = [0.3,0.3,0.3];
     let ambientColor = [1.0,1.0,1.0];
 
+    window.onresize = doResize; //register resize event
 
     //SET Global states (viewport size, viewport background color, Depth test)
     gl.viewport(0, 0, canvas.width, canvas.height);
@@ -129,11 +131,11 @@ function main() {
     function drawScene(time) {
         time *= 0.001;
 
-        gl.clearColor(0.85, 0.85, 0.85, 1.0);
+        gl.clearColor(0.9, 0.77, 0.5, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         //compute aspect ratio
-        let aspect = gl.canvas.width / gl.canvas.height;
+        aspect = gl.canvas.width / gl.canvas.height;
 
         //compute new camera position
         if (movingRight) moveCameraRight();
@@ -228,4 +230,21 @@ function getLocalMatrix(position, rotation, scale) {
         utils.MakeScaleMatrix(scale[0], scale[1], scale[2]),
     ];
     return utils.multiplyListOfMatrices(matricesList);
+}
+
+function doResize() {
+    // set canvas dimensions
+
+    let canvas = document.getElementById("c");
+
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    var w=canvas.clientWidth;
+    var h=canvas.clientHeight;
+
+    gl.clearColor(0.0, 1.0, 1.0, 1.0);
+    gl.viewport(0.0, 0.0, w, h);
+
+    aspect = w/h;
+
 }
