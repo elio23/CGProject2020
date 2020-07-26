@@ -34,7 +34,6 @@ function main() {
     canvas.addEventListener("mousemove", doMouseMove, false);
 
     //Setting up keyboard events
-    //'window' is a JavaScript object (if "canvas", it will not work)
     window.addEventListener("keyup", keyFunctionUp, false);
     window.addEventListener("keydown", keyFunctionDown, false);
     window.addEventListener("mouseup", raycastMouseUp);
