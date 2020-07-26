@@ -1,0 +1,271 @@
+Index: index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\n<html lang=\"en-US\">\n\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>05 - Scene Graph</title>\n    <style type=\"text/css\">\n        body {\n            margin: 0;\n            background-color: gray;\n        }\n\n        canvas {\n            display: block;\n            background-color: white;\n        }\n    </style>\n</head>\n\n\n<body>\n<canvas id=\"c\"></canvas>\n<div id=\"legend\"\n     style=\"display: none; position: absolute; z-index: 1; left: 40px; top: 400px; width:300px; height:165px; background-color: white; border-style: dashed; border-color: blue; opacity: 0.7; padding: 5px 10px 5px 10px; overflow:auto\">\n    <p>Selected: <span id=\"selected\"></span></p>\n    <form>\n        <input type=\"radio\" name=\"light\" id=\"yesl\" onchange=\"onRadioButtonChange(this.value);\" value=\"1\" checked> Option\n        1 <br/>\n        <input type=\"radio\" name=\"light\" onchange=\"onRadioButtonChange(this.value);\" value=\"2\"> Option 2 <br/>\n        <input type=\"radio\" name=\"light\" onchange=\"onRadioButtonChange(this.value);\" value=\"3\"> Option 3 <br/>\n    </form>\n    <p><b> Slider </b></p>\n    <div id=\"slider1\"> 0\n        <input id=\"slide1\" type=\"range\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0\" onchange=\"onSliderChange(this.value);\"/> 1 <br/>\n    </div>\n\n    <p><b> Checkbox </b></p>\n    <input type=\"checkbox\" id=\"chbx\" onclick=\"onCheckBoxChange(this.checked);\"/> Move Lights<br/>\n    <p><b> Drop-down list</b></p>\n\n    <select id=\"drop-down\" name=\"\" onchange=\"onDropdownChange(this.value);\">\n        <option value=\"1\" selected>Option 1</option>\n        <option value=\"2\">Option 2</option>\n        <option value=\"3\">Option 3</option>\n    </select>\n</div>\n<script type=\"text/javascript\" src=\"models/index.js\"></script>\n<script type=\"text/javascript\" src=\"utils/utils.js\"></script>\n<script type=\"text/javascript\" src=\"utils/sceneGraphUtils.js\"></script>\n<script type=\"text/javascript\" src=\"utils/loaders.js\"></script>\n<script type=\"text/javascript\" src=\"shapesDefinition.js\"></script>\n<script type=\"text/javascript\" src=\"utils/events.js\"></script>\n<script type=\"text/javascript\" src=\"drawing.js\"></script>\n<script type=\"text/javascript\" src=\"webgl-obj-loader.min.js\"></script>\n<script type=\"text/javascript\" src=\"utils/raycast.js\"></script>\n</body>\n\n</html>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- index.html	(revision 9c4724bcc53ebb66348335593340b7ec9a93dd68)
++++ index.html	(date 1595797338148)
+@@ -49,7 +49,6 @@
+ <script type="text/javascript" src="utils/utils.js"></script>
+ <script type="text/javascript" src="utils/sceneGraphUtils.js"></script>
+ <script type="text/javascript" src="utils/loaders.js"></script>
+-<script type="text/javascript" src="shapesDefinition.js"></script>
+ <script type="text/javascript" src="utils/events.js"></script>
+ <script type="text/javascript" src="drawing.js"></script>
+ <script type="text/javascript" src="webgl-obj-loader.min.js"></script>
+Index: drawing.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>let gl;\nlet baseDir;\nlet shaderDir;\nlet program;\n\nlet viewMatrix;\nlet perspectiveMatrix;\n\n\nlet objects = [];\n\n//Parameters for Camera\nlet cx = -40.0;\nlet cy = 25.0;\nlet cz = 0.0;\nlet elevation = -20.0;\nlet angle = 90.0;\nlet roll = 0.01;\n\n//object used to store model data after being loaded\nlet loadedModelData = function (vao, indicesLength, textures) {\n    this.vao = vao;\n    this.indicesLength = indicesLength;\n    this.textures = textures;\n};\n\n\nfunction main() {\n\n    //Setting up mouse events\n    let canvas = document.getElementById(\"c\");\n    canvas.addEventListener(\"mousedown\", doMouseDown, false);\n    canvas.addEventListener(\"mouseup\", doMouseUp, false);\n    canvas.addEventListener(\"mousemove\", doMouseMove, false);\n\n    //Setting up keyboard events\n    //'window' is a JavaScript object (if \"canvas\", it will not work)\n    window.addEventListener(\"keyup\", keyFunctionUp, false);\n    window.addEventListener(\"keydown\", keyFunctionDown, false);\n    window.addEventListener(\"mouseup\", raycastMouseUp);\n\n    //Setting up lights\n    let dirLightAlpha = -utils.degToRad(60);\n    let dirLightBeta = -utils.degToRad(0);\n    let directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),\n        Math.sin(dirLightAlpha), Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];\n    let directionalLightColor = [1.0, 1.0, 1.0];\n    let ambientLight = [0.3,0.3,0.3];\n    let ambientColor = [1.0,1.0,1.0];\n\n\n    //SET Global states (viewport size, viewport background color, Depth test)\n    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);\n    gl.clearColor(0.85, 0.85, 0.85, 1.0);\n    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);\n    gl.enable(gl.DEPTH_TEST);\n\n    //get uniforms from shaders\n    let matrixLocation = gl.getUniformLocation(program, \"matrix\");\n    let materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');\n    let lightDirectionHandle = gl.getUniformLocation(program, 'lightDirection');\n    let lightColorHandle = gl.getUniformLocation(program, 'lightColor');\n    let ambientLightHandle = gl.getUniformLocation(program, 'ambientLight');\n    let ambientColorHandle = gl.getUniformLocation(program,'ambientColor');\n    let normalMatrixPositionHandle = gl.getUniformLocation(program, 'nMatrix');\n\n    //uniform for textures location\n    let textLocation = gl.getUniformLocation(program, \"u_texture\");\n\n    //Solved in one cycle, no more referencing to variable names, but Object fields...\n    Object.keys(models).forEach(k => {\n        models[k].model = loaders.loadModel(gl, program, models[k].data, models[k].modelTextures)\n    })\n\n    // ...Apart from this, used for roomNode\n    let bed = loaders.loadModel(gl, program, models[\"bed\"].data, models[\"bed\"].modelTextures);\n\n    //-------------Define the scene Graph----------------\n\n    let roomNode = new Node();\n    roomNode.localMatrix = getLocalMatrix([0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [1, 1, 1]);\n    /*roomNode.drawInfo = {\n        materialColor: [1.0, 1.0, 1.0],\n        programInfo: program,\n        bufferLength: indexData.length,\n        vertexArray: bed.vao,\n        indicesLength: bed.indicesLength,\n        textures: bed.textures,\n    };*/\n\n    //objects.push(roomNode);\n\n    const setGraph = (items, rootNode, list) => {\n        items.forEach(item => {\n\n            let itemNode = new Node();\n            let itemBody = new Node();\n\n            let model = models[item.model].model;\n            let position = item.parent.position\n\n            itemNode.localMatrix = getLocalMatrix(\n                position,\n                [0.0, 0.0, 0.0],\n                [1.0, 1.0, 1.0]\n            );\n\n            if(item.collider!=null) itemNode.collider = [item.collider.position, item.collider.ray];\n            itemNode.label = item.label\n\n            itemBody.localMatrix = getLocalMatrix(\n                item.body.position,\n                item.body.rotation,\n                item.body.scale\n            );\n\n            var randomDefaultTexture = Math.floor(Math.random()*(model.textures.length-1));\n\n            itemBody.drawInfo = {\n                materialColor: [1.0, 1.0, 1.0],\n                programInfo: program,\n                bufferLength: indexData.length,\n                vertexArray: model.vao,\n                indicesLength: model.indicesLength,\n                textures: model.textures,\n                currentTextureIndex: randomDefaultTexture, // default texture loaded is randomly chosen\n            };\n\n            console.log(\"current texture index: \" + randomDefaultTexture);\n\n            itemBody.setParent(itemNode);\n            itemNode.setParent(rootNode);\n\n            list.push(itemBody);\n\n        })\n    }\n    setGraph(items, roomNode, objects)\n    //---------------SceneGraph defined-------------------\n\n    requestAnimationFrame(drawScene);\n\n    // Draw the scene called for each frame\n    function drawScene(time) {\n        time *= 0.001;\n\n        gl.clearColor(0.85, 0.85, 0.85, 1.0);\n        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);\n\n        //compute aspect ratio\n        let aspect = gl.canvas.width / gl.canvas.height;\n\n        //compute new camera position\n        if (movingRight) moveCameraRight();\n        if (movingLeft) moveCameraLeft();\n        if (movingForward) moveCameraForward();\n        if (movingBackward) moveCameraBackward();\n\n\n        //compute viewMatrix for camera (look-in-direction)\n        viewMatrix = utils.multiplyMatrices(\n            utils.MakeRotateZMatrix(-roll), utils.MakeView(cx, cy, cz, elevation, angle));\n\n        // Update all world matrices in the scene graph\n        roomNode.updateWorldMatrix();\n\n        // Compute all the matrices for rendering\n        objects.forEach(function (object) {\n\n            gl.useProgram(object.drawInfo.programInfo);\n\n            perspectiveMatrix = utils.MakePerspective(60, aspect, 1.0, 2000.0);\n\n            let projectionMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);\n            projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, projectionMatrix);\n            let normalMatrix = utils.invertMatrix(utils.transposeMatrix(object.worldMatrix));\n\n            gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));\n            gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));\n\n\n            gl.activeTexture(gl.TEXTURE0);\n            gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textures[object.drawInfo.currentTextureIndex]); // default texture is randomly chosen\n            gl.uniform1i(textLocation, 0);\n\n            /*gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);\n            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);\n            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);\n            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);\n\n            gl.generateMipmap(gl.TEXTURE_2D)*/\n\n            gl.uniform3fv(materialDiffColorHandle, object.drawInfo.materialColor);\n            gl.uniform3fv(lightColorHandle, directionalLightColor);\n            gl.uniform3fv(lightDirectionHandle, directionalLight);\n            gl.uniform3fv(ambientLightHandle, ambientLight);\n            gl.uniform3fv(ambientColorHandle, ambientColor);\n\n            gl.bindVertexArray(object.drawInfo.vertexArray);\n            gl.drawElements(gl.TRIANGLES, object.drawInfo.indicesLength, gl.UNSIGNED_SHORT, 0);\n        });\n\n        requestAnimationFrame(drawScene);\n    }\n}\n\nasync function init() {\n    let path = window.location.pathname;\n    let page = path.split(\"/\").pop();\n    baseDir = window.location.href.replace(page, '');\n    console.log(\"basedir = \" + baseDir);\n    shaderDir = baseDir + \"shaders/\";\n\n    let canvas = document.getElementById(\"c\");\n    gl = canvas.getContext(\"webgl2\");\n    if (!gl) {\n        document.write(\"GL context not opened\");\n        return;\n    }\n    utils.resizeCanvasToDisplaySize(gl.canvas);\n\n    await utils.loadFiles([shaderDir + 'vertex_shader.glsl', shaderDir + 'fragment_shader.glsl'], function (shaderText) {\n        console.log(shaderText[0]);\n        console.log(shaderText[1]);\n        let vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);\n        let fragmentShader = utils.createShader(gl, gl.FRAGMENT_SHADER, shaderText[1]);\n\n        program = utils.createProgram(gl, vertexShader, fragmentShader);\n    });\n\n    gl.useProgram(program);\n\n    for (const k of Object.keys(models)) {\n        await utils.get_json(models[k].modelStr, (data) => {\n            models[k].data = data;\n        })\n    }\n\n    main();\n}\n\nwindow.onload = init();\n\nfunction getLocalMatrix(position, rotation, scale) {\n    let matricesList = [\n        utils.MakeTranslateMatrix(position[0], position[1], position[2]),\n        utils.MakeRotateYMatrix(rotation[1]),\n        utils.MakeRotateXMatrix(rotation[0]),\n        utils.MakeRotateZMatrix(rotation[2]),\n        utils.MakeScaleMatrix(scale[0], scale[1], scale[2]),\n    ];\n    return utils.multiplyListOfMatrices(matricesList);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- drawing.js	(revision 9c4724bcc53ebb66348335593340b7ec9a93dd68)
++++ drawing.js	(date 1595797338136)
+@@ -119,7 +119,6 @@
+             itemBody.drawInfo = {
+                 materialColor: [1.0, 1.0, 1.0],
+                 programInfo: program,
+-                bufferLength: indexData.length,
+                 vertexArray: model.vao,
+                 indicesLength: model.indicesLength,
+                 textures: model.textures,
+@@ -251,3 +250,4 @@
+     ];
+     return utils.multiplyListOfMatrices(matricesList);
+ }
++ƒ
+Index: shapesDefinition.js
+===================================================================
+--- shapesDefinition.js	(revision 9c4724bcc53ebb66348335593340b7ec9a93dd68)
++++ shapesDefinition.js	(revision 9c4724bcc53ebb66348335593340b7ec9a93dd68)
+@@ -1,129 +0,0 @@
+-//3D cube vertex coordinates and indices
+-
+-let vertices = [					// Vertex #:
+-	 1.0, 1.0,-1.0, 	//  0
+-	 1.0,-1.0,-1.0,  //  1
+-	-1.0, 1.0,-1.0,  //  2
+-	 1.0, 1.0, 1.0,  //  3
+-	-1.0, 1.0, 1.0,  //  4
+-	 1.0,-1.0, 1.0,  //  5
+-	 1.0, 1.0,-1.0,  //  6
+-	 1.0, 1.0, 1.0,  //  7
+-	 1.0,-1.0,-1.0,  //  8
+-	 1.0,-1.0,-1.0,  //  9
+-	 1.0,-1.0, 1.0,  // 10
+-	-1.0,-1.0,-1.0,  // 11
+-	-1.0,-1.0,-1.0,  // 12
+-	-1.0,-1.0, 1.0,  // 13
+-	-1.0, 1.0,-1.0,  // 14
+-	 1.0, 1.0, 1.0,  // 15
+-	 1.0, 1.0,-1.0,  // 16
+-	-1.0, 1.0, 1.0,  // 17
+-	-1.0,-1.0,-1.0,  // 18
+-	-1.0,-1.0, 1.0,  // 19
+-	 1.0,-1.0, 1.0,  // 20
+-	-1.0,-1.0, 1.0,  // 21
+-	-1.0, 1.0, 1.0,  // 22
+-	-1.0, 1.0,-1.0   // 23
+-];
+-
+-let indices = [ 	// Face #:
+-	  0,  1,  2,	//  0
+-	  1, 18,  2,    //  1
+-	  3,  4,  5,    //  2
+-	  4, 19,  5,    //  3
+-	  6,  7,  8,    //  4
+-	  7, 20,  8,    //  5
+-	  9, 10, 11,    //  6
+-	 10, 21, 11,    //  7
+-	 12, 13, 14,    //  8
+-	 13, 22, 14,    //  9
+-	 15, 16, 17,    // 10
+-	 16, 23, 17     // 11
+-];
+-
+-let normals = [					// Color #:
+-	 0.0, 0.0,-1.0, 	//  0
+-	 0.0, 0.0,-1.0,  //  1
+-	 0.0, 0.0,-1.0,  //  2
+-	 0.0, 0.0, 1.0,  //  3
+-	 0.0, 0.0, 1.0,  //  4
+-	 0.0, 0.0, 1.0,  //  5
+-	 1.0, 0.0, 0.0,  //  6
+-	 1.0, 0.0, 0.0,  //  7
+-	 1.0, 0.0, 0.0,  //  8
+-	 0.0,-1.0, 0.0,  //  9
+-	 0.0,-1.0, 0.0,  // 10
+-	 0.0,-1.0, 0.0,  // 11
+-	-1.0, 0.0, 0.0,  // 12
+-	-1.0, 0.0, 0.0,  // 13
+-	-1.0, 0.0, 0.0,  // 14
+-	 0.0, 1.0, 0.0,  // 15
+-	 0.0, 1.0, 0.0,  // 16
+-	 0.0, 1.0, 0.0,  // 17
+-	 0.0, 0.0,-1.0,  // 18
+-	 0.0, 0.0, 1.0,  // 19
+-	 1.0, 0.0, 0.0,  // 20
+-	 0.0,-1.0, 0.0,  // 21
+-	-1.0, 0.0, 0.0,  // 22
+-	 0.0, 1.0, 0.0   // 23
+-];
+-
+-
+-let vertexPositionData =[] ;
+-let normalData =[];
+-let indexData =[];
+-
+-function initSphere() {
+-  let latitudeBands = 10;
+-  let longitudeBands = 10;
+-  let radius = 5.0;
+-
+-
+-  // Calculate sphere vertex positions and normals.
+-  for (let latNumber = 0; latNumber <= latitudeBands; ++latNumber) {
+-    let theta = latNumber * Math.PI / latitudeBands;
+-    let sinTheta = Math.sin(theta);
+-    let cosTheta = Math.cos(theta);
+-
+-    for (let longNumber = 0; longNumber <= longitudeBands; ++longNumber) {
+-      let phi = longNumber * 2 * Math.PI / longitudeBands;
+-      let sinPhi = Math.sin(phi);
+-      let cosPhi = Math.cos(phi);
+-
+-      let x = cosPhi * sinTheta;
+-      let y = cosTheta;
+-      let z = sinPhi * sinTheta;
+-
+-      vertexPositionData.push(radius * x);
+-      vertexPositionData.push(radius * y);
+-      vertexPositionData.push(radius * z);
+-
+-      normalData.push(x);
+-      normalData.push(y);
+-      normalData.push(z);
+-    }
+-  }
+-
+-  // Calculate sphere indices.
+-  for (let latNumber = 0; latNumber < latitudeBands; ++latNumber) {
+-    for (let longNumber = 0; longNumber < longitudeBands; ++longNumber) {
+-      let first = (latNumber * (longitudeBands + 1)) + longNumber;
+-      let second = first + longitudeBands + 1;
+-
+-      indexData.push(first);
+-      indexData.push(second);
+-      indexData.push(first + 1);
+-
+-      indexData.push(second);
+-      indexData.push(second + 1);
+-      indexData.push(first + 1);
+-    }
+-  }
+-
+- // vertexPositionData =vertices ;
+- // normalData =normals;
+- // indexData =indices;
+-
+-  return indexData.length
+-}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"BranchesTreeState\">\n    <expand>\n      <path>\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"LOCAL_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n      </path>\n      <path>\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n      </path>\n      <path>\n        <item name=\"ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"REMOTE_ROOT\" type=\"e8cecc67:BranchNodeDescriptor\" />\n        <item name=\"GROUP_NODE:origin\" type=\"e8cecc67:BranchNodeDescriptor\" />\n      </path>\n    </expand>\n    <select />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"50804bd9-16d1-4249-a095-00ddd015b1d3\" name=\"Default Changelist\" comment=\"super refactor (800+ lines to 232 lines)\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/drawing.js\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/drawing.js\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/shaders/fs.glsl\" beforeDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/shaders/vs.glsl\" beforeDir=\"false\" />\n    </list>\n    <option name=\"EXCLUDED_CONVERTED_TO_IGNORED\" value=\"true\" />\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"JavaScript File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"JsFlowSettings\">\n    <service-enabled>true</service-enabled>\n    <exe-path />\n    <other-services-enabled>true</other-services-enabled>\n    <auto-save>true</auto-save>\n  </component>\n  <component name=\"ProjectId\" id=\"1ek6nCw3NjYLavpBXZYser2A10n\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\n    <OptionsSetting value=\"false\" id=\"Update\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">\n    <property name=\"RunOnceActivity.OpenProjectViewOnStart\" value=\"true\" />\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\n    <property name=\"WebServerToolWindowFactoryState\" value=\"false\" />\n    <property name=\"aspect.path.notification.shown\" value=\"true\" />\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$\" />\n    <property name=\"settings.editor.selected.configurable\" value=\"project.propVCSSupport.Mappings\" />\n    <property name=\"show.migrate.to.gradle.popup\" value=\"false\" />\n  </component>\n  <component name=\"RecentsManager\">\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/models/empty_room\" />\n      <recent name=\"$PROJECT_DIR$/models\" />\n      <recent name=\"$PROJECT_DIR$/utils\" />\n    </key>\n  </component>\n  <component name=\"RunDashboard\">\n    <option name=\"ruleStates\">\n      <list>\n        <RuleState>\n          <option name=\"name\" value=\"ConfigurationTypeDashboardGroupingRule\" />\n        </RuleState>\n        <RuleState>\n          <option name=\"name\" value=\"StatusDashboardGroupingRule\" />\n        </RuleState>\n      </list>\n    </option>\n  </component>\n  <component name=\"SvnConfiguration\">\n    <configuration />\n  </component>\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"50804bd9-16d1-4249-a095-00ddd015b1d3\" name=\"Default Changelist\" comment=\"Added setGraph function\" />\n      <created>1594853407204</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1594853407204</updated>\n      <workItem from=\"1594853408823\" duration=\"822000\" />\n      <workItem from=\"1594829735382\" duration=\"11516000\" />\n      <workItem from=\"1595110092661\" duration=\"6246000\" />\n      <workItem from=\"1595121131980\" duration=\"1401000\" />\n      <workItem from=\"1595122595871\" duration=\"3714000\" />\n      <workItem from=\"1595272109096\" duration=\"61000\" />\n      <workItem from=\"1595272188599\" duration=\"5498000\" />\n      <workItem from=\"1595594351526\" duration=\"2670000\" />\n      <workItem from=\"1595595721200\" duration=\"715000\" />\n      <workItem from=\"1595710674984\" duration=\"2494000\" />\n      <workItem from=\"1595761026908\" duration=\"9680000\" />\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"added wall, no texture? Good setGraph function needed\">\n      <created>1594858632163</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1594858632163</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"Added setGraph function\">\n      <created>1594861525312</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1594861525312</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"added room (missing texture and lights)\">\n      <created>1595115140695</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1595115140695</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"bunch of refactor...\">\n      <created>1595122187360</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1595122187360</updated>\n    </task>\n    <task id=\"LOCAL-00005\" summary=\"super refactor (800+ lines to 232 lines)\">\n      <created>1595125755438</created>\n      <option name=\"number\" value=\"00005\" />\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1595125755438</updated>\n    </task>\n    <task id=\"LOCAL-00006\" summary=\"fix\">\n      <created>1595126037305</created>\n      <option name=\"number\" value=\"00006\" />\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1595126037305</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"7\" />\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"1\" />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State>\n              <option name=\"COLUMN_ORDER\" />\n            </State>\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"added wall, no texture? Good setGraph function needed\" />\n    <MESSAGE value=\"Added setGraph function\" />\n    <MESSAGE value=\"added room (missing texture and lights)\" />\n    <MESSAGE value=\"bunch of refactor...\" />\n    <MESSAGE value=\"super refactor (800+ lines to 232 lines)\" />\n    <MESSAGE value=\"fix\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"fix\" />\n  </component>\n  <component name=\"WindowStateProjectService\">\n    <state x=\"634\" y=\"285\" key=\"#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog\" timestamp=\"1595121482724\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"634\" y=\"285\" key=\"#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595121482724\" />\n    <state x=\"179\" y=\"114\" key=\"MergeDialog\" timestamp=\"1595610008211\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"179\" y=\"114\" key=\"MergeDialog/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595610008210\" />\n    <state x=\"534\" y=\"241\" key=\"RollbackChangesDialog\" timestamp=\"1595634324339\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"534\" y=\"241\" key=\"RollbackChangesDialog/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595634324339\" />\n    <state x=\"397\" y=\"170\" key=\"SettingsEditor\" timestamp=\"1595621587205\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"397\" y=\"170\" key=\"SettingsEditor/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595621587205\" />\n    <state x=\"496\" y=\"272\" key=\"Vcs.Push.Dialog.v2\" timestamp=\"1595126038741\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1020\" />\n    </state>\n    <state x=\"496\" y=\"271\" key=\"Vcs.Push.Dialog.v2/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595122188923\" />\n    <state x=\"496\" y=\"272\" key=\"Vcs.Push.Dialog.v2/0.23.1792.1020@0.23.1792.1020\" timestamp=\"1595126038741\" />\n    <state x=\"496\" y=\"273\" key=\"Vcs.Push.Dialog.v2/0.23.1792.1026@0.23.1792.1026\" timestamp=\"1595115145095\" />\n    <state x=\"200\" y=\"149\" width=\"1592\" height=\"817\" key=\"com.intellij.history.integration.ui.views.DirectoryHistoryDialog\" timestamp=\"1595122151939\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"200\" y=\"149\" width=\"1592\" height=\"817\" key=\"com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595122151939\" />\n    <state x=\"100\" y=\"123\" width=\"1592\" height=\"817\" key=\"com.intellij.history.integration.ui.views.FileHistoryDialog\" timestamp=\"1595121847936\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"100\" y=\"123\" width=\"1592\" height=\"817\" key=\"com.intellij.history.integration.ui.views.FileHistoryDialog/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595121847936\" />\n    <state x=\"684\" y=\"452\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2\" timestamp=\"1595112938421\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"684\" y=\"452\" key=\"com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595112938421\" />\n    <state x=\"597\" y=\"256\" width=\"891\" height=\"548\" key=\"find.popup\" timestamp=\"1595122148240\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"597\" y=\"256\" width=\"891\" height=\"548\" key=\"find.popup/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1595122148240\" />\n    <state x=\"597\" y=\"257\" width=\"891\" height=\"548\" key=\"find.popup/0.23.1792.1020@0.23.1792.1020\" timestamp=\"1595120763876\" />\n    <state x=\"561\" y=\"248\" width=\"670\" height=\"676\" key=\"search.everywhere.popup\" timestamp=\"1594859892343\">\n      <screen x=\"0\" y=\"23\" width=\"1792\" height=\"1017\" />\n    </state>\n    <state x=\"561\" y=\"248\" width=\"670\" height=\"676\" key=\"search.everywhere.popup/0.23.1792.1017@0.23.1792.1017\" timestamp=\"1594859892343\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(revision 9c4724bcc53ebb66348335593340b7ec9a93dd68)
++++ .idea/workspace.xml	(date 1595797877991)
+@@ -1,31 +1,17 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="BranchesTreeState">
+-    <expand>
+-      <path>
+-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+-        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+-      </path>
+-      <path>
+-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+-      </path>
+-      <path>
+-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+-      </path>
+-    </expand>
++    <expand />
+     <select />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="super refactor (800+ lines to 232 lines)">
++    <list default="true" id="50804bd9-16d1-4249-a095-00ddd015b1d3" name="Default Changelist" comment="added menu plus selection">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/shaders/fs.glsl" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/shaders/vs.glsl" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/models/empty_room/Wall_bak.jpg" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/shapesDefinition.js" beforeDir="false" />
+     </list>
+-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -70,18 +56,6 @@
+       <recent name="$PROJECT_DIR$/models" />
+       <recent name="$PROJECT_DIR$/utils" />
+     </key>
+-  </component>
+-  <component name="RunDashboard">
+-    <option name="ruleStates">
+-      <list>
+-        <RuleState>
+-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+-        </RuleState>
+-        <RuleState>
+-          <option name="name" value="StatusDashboardGroupingRule" />
+-        </RuleState>
+-      </list>
+-    </option>
+   </component>
+   <component name="SvnConfiguration">
+     <configuration />
+@@ -104,6 +78,8 @@
+       <workItem from="1595595721200" duration="715000" />
+       <workItem from="1595710674984" duration="2494000" />
+       <workItem from="1595761026908" duration="9680000" />
++      <workItem from="1595795618426" duration="129000" />
++      <workItem from="1595795758210" duration="1436000" />
+     </task>
+     <task id="LOCAL-00001" summary="added wall, no texture? Good setGraph function needed">
+       <created>1594858632163</created>
+@@ -151,20 +127,19 @@
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+-    <option name="version" value="1" />
++    <option name="version" value="2" />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+     <option name="TAB_STATES">
+       <map>
+         <entry key="MAIN">
+           <value>
+-            <State>
+-              <option name="COLUMN_ORDER" />
+-            </State>
++            <State />
+           </value>
+         </entry>
+       </map>
+     </option>
++    <option name="oldMeFiltersMigrated" value="true" />
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="added wall, no texture? Good setGraph function needed" />

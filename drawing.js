@@ -40,10 +40,10 @@ function main() {
 
     //Setting up lights
     let dirLightAlpha = -utils.degToRad(60);
-    let dirLightBeta = -utils.degToRad(0);
+    let dirLightBeta = -utils.degToRad(30);
     let directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
         Math.sin(dirLightAlpha), Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
-    let directionalLightColor = [1.0, 1.0, 1.0];
+    let directionalLightColor = [0.5, 0.5, 0.5];
     let ambientLight = [0.3,0.3,0.3];
     let ambientColor = [1.0,1.0,1.0];
 

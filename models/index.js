@@ -11,7 +11,7 @@ const models = {
 
     closet: {
         modelStr: 'models/closet/closet.json',
-        modelTextures: ['models/closet/closet.png'],
+        modelTextures: ['models/closet/closet.png', 'models/closet/rusty.jpg'],
     },
 
     sofa: {
@@ -20,7 +20,8 @@ const models = {
             ['models/sofa/verde.jpg',
                 'models/sofa/url.jpg',
                 'models/sofa/bianco.jpg',
-                'models/sofa/TEXT_MDF.jpg'],
+                'models/sofa/TEXT_MDF.jpg',
+                'models/sofa/giraffe.jpg'],
     },
 
     sofa2: {
@@ -29,7 +30,8 @@ const models = {
                         'models/sofa/verde.jpg',
                         'models/sofa/url.jpg',
                         'models/sofa/bianco.jpg',
-                        'models/sofa/TEXT_MDF.jpg'],
+                        'models/sofa/TEXT_MDF.jpg',
+                        'models/sofa/giraffe.jpg'],
     },
 
     /*table: {
