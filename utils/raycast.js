@@ -80,21 +80,21 @@ function dropDownMenu(i){
     });
 }
 
-function  sliders(i) {
+function sliders(i) {
     var sliders = document.getElementById("slider1");
     sliders.innerHTML="";
-
+    let label;
     for(let j=0;j<3;j++){
         switch (j) {
-            case 0: var label = document.createElement("span");
+            case 0: label = document.createElement("span");
                     sliders.appendChild(label);
                     label.innerText = "R ";
                     break;
-            case 1: var label = document.createElement("span");
+            case 1: label = document.createElement("span");
                     sliders.appendChild(label);
                     label.innerText = "G ";
                     break;
-            case 2: var label = document.createElement("span");
+            case 2: label = document.createElement("span");
                     sliders.appendChild(label);
                     label.innerText = "B ";
                     break;

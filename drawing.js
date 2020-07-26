@@ -24,7 +24,6 @@ let loadedModelData = function (vao, indicesLength, textures) {
     this.textures = textures;
 };
 
-
 function main() {
 
     //Setting up mouse events
@@ -50,7 +49,7 @@ function main() {
 
 
     //SET Global states (viewport size, viewport background color, Depth test)
-    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0.85, 0.85, 0.85, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST);
@@ -72,23 +71,10 @@ function main() {
         models[k].model = loaders.loadModel(gl, program, models[k].data, models[k].modelTextures)
     })
 
-    // ...Apart from this, used for roomNode
-    let bed = loaders.loadModel(gl, program, models["bed"].data, models["bed"].modelTextures);
-
     //-------------Define the scene Graph----------------
 
     let roomNode = new Node();
     roomNode.localMatrix = getLocalMatrix([0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [1, 1, 1]);
-    /*roomNode.drawInfo = {
-        materialColor: [1.0, 1.0, 1.0],
-        programInfo: program,
-        bufferLength: indexData.length,
-        vertexArray: bed.vao,
-        indicesLength: bed.indicesLength,
-        textures: bed.textures,
-    };*/
-
-    //objects.push(roomNode);
 
     const setGraph = (items, rootNode, list) => {
         items.forEach(item => {
@@ -119,7 +105,6 @@ function main() {
             itemBody.drawInfo = {
                 materialColor: [1.0, 1.0, 1.0],
                 programInfo: program,
-                bufferLength: indexData.length,
                 vertexArray: model.vao,
                 indicesLength: model.indicesLength,
                 textures: model.textures,
@@ -182,13 +167,6 @@ function main() {
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textures[object.drawInfo.currentTextureIndex]); // default texture is randomly chosen
             gl.uniform1i(textLocation, 0);
-
-            /*gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-
-            gl.generateMipmap(gl.TEXTURE_2D)*/
 
             gl.uniform3fv(materialDiffColorHandle, object.drawInfo.materialColor);
             gl.uniform3fv(lightColorHandle, directionalLightColor);
