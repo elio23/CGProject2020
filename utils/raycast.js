@@ -73,9 +73,9 @@ function dropDownMenu(i){
     objects[i].drawInfo.textures.forEach((texture)=>{
         var textureIndex = objects[i].drawInfo.textures.indexOf(texture);
         var option = document.createElement("option");
-        option.setAttribute("value",textureIndex);    //"objectIndex - textureIndex"
+        option.setAttribute("value",textureIndex);
         option.innerText=models[items[i].model].modelTextures[textureIndex];
-        if(objects[i].drawInfo.textures.indexOf(texture) === objects[i].drawInfo.currentTextureIndex) option.selected="selected";
+        if(textureIndex == objects[i].drawInfo.currentTextureIndex) option.selected=true;
         dropDown.appendChild(option);
     });
 }
