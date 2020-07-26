@@ -23,8 +23,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/drawing.js" beforeDir="false" afterPath="$PROJECT_DIR$/drawing.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/raycast.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/raycast.js" afterDir="false" />
     </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -101,6 +101,8 @@
       <workItem from="1595272188599" duration="5498000" />
       <workItem from="1595594351526" duration="2670000" />
       <workItem from="1595595721200" duration="715000" />
+      <workItem from="1595710674984" duration="2494000" />
+      <workItem from="1595761026908" duration="3157000" />
     </task>
     <task id="LOCAL-00001" summary="added wall, no texture? Good setGraph function needed">
       <created>1594858632163</created>
@@ -148,7 +150,7 @@
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="2" />
+    <option name="version" value="1" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

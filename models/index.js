@@ -187,7 +187,7 @@ const items = [
     },
     {
         parent: {
-            position: [-10.0, 0.0, 60.0],
+            position: [-10.0, 0.0, 70.0],
         },
         body: {
             position: [0.0, 0.0, -1.0],
@@ -203,7 +203,7 @@ const items = [
     },
     {
         parent: {
-            position: [20.0, 0.0, 60.0],
+            position: [20.0, 0.0, 70.0],
         },
         body: {
             position: [0.0, 0.0, -1.0],
@@ -220,7 +220,7 @@ const items = [
     },
     {
         parent: {
-            position: [50.0, 0.0, 60.0],
+            position: [50.0, 0.0, 70.0],
         },
         body: {
             position: [0.0, 0.0, -1.0],
@@ -237,7 +237,7 @@ const items = [
     },
     {
         parent: {
-            position: [80.0, 0.0, 60.0],
+            position: [80.0, 0.0, 70.0],
         },
         body: {
             position: [0.0, 0.0, -1.0],
@@ -257,7 +257,7 @@ const items = [
             position: [1.0, 0.0, -10.0],
         },
         body: {
-            position: [100.0, 0.0, 5.0],
+            position: [8.0, 0.0, 0.0],
             rotation: [-90.0, 0.0, 0.0],
             scale: [0.1, 0.1, 0.1]
         },
@@ -273,7 +273,7 @@ const items = [
             position: [41.0, 0.0, -10.0],
         },
         body: {
-            position: [0.0, 0.67, 0.0],
+            position: [0.0, 18.0, 0.0],
             rotation: [0.0, 180.0, 0.0],
             scale: [27.0, 27.0, 27.0]
         },

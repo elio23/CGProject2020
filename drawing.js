@@ -153,7 +153,7 @@ function main() {
         if (movingBackward) moveCameraBackward();
 
 
-        //compute viewMatrix for camera
+        //compute viewMatrix for camera (look-in-direction)
         viewMatrix = utils.multiplyMatrices(
             utils.MakeRotateZMatrix(-roll), utils.MakeView(cx, cy, cz, elevation, angle));
 
@@ -237,11 +237,11 @@ window.onload = init();
 
 function getLocalMatrix(position, rotation, scale) {
     let matricesList = [
+        utils.MakeTranslateMatrix(position[0], position[1], position[2]),
         utils.MakeScaleMatrix(scale[0], scale[1], scale[2]),
         utils.MakeRotateXMatrix(rotation[0]),
         utils.MakeRotateYMatrix(rotation[1]),
         utils.MakeRotateZMatrix(rotation[2]),
-        utils.MakeTranslateMatrix(position[0], position[1], position[2]),
     ];
     return utils.multiplyListOfMatrices(matricesList);
 }
