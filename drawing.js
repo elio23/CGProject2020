@@ -45,6 +45,8 @@ function main() {
     let directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
         Math.sin(dirLightAlpha), Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
     let directionalLightColor = [1.0, 1.0, 1.0];
+    let ambientLight = [0.3,0.3,0.3];
+    let ambientColor = [1.0,1.0,1.0];
 
 
     //SET Global states (viewport size, viewport background color, Depth test)
@@ -58,6 +60,8 @@ function main() {
     let materialDiffColorHandle = gl.getUniformLocation(program, 'mDiffColor');
     let lightDirectionHandle = gl.getUniformLocation(program, 'lightDirection');
     let lightColorHandle = gl.getUniformLocation(program, 'lightColor');
+    let ambientLightHandle = gl.getUniformLocation(program, 'ambientLight');
+    let ambientColorHandle = gl.getUniformLocation(program,'ambientColor');
     let normalMatrixPositionHandle = gl.getUniformLocation(program, 'nMatrix');
 
     //uniform for textures location
@@ -189,6 +193,8 @@ function main() {
             gl.uniform3fv(materialDiffColorHandle, object.drawInfo.materialColor);
             gl.uniform3fv(lightColorHandle, directionalLightColor);
             gl.uniform3fv(lightDirectionHandle, directionalLight);
+            gl.uniform3fv(ambientLightHandle, ambientLight);
+            gl.uniform3fv(ambientColorHandle, ambientColor);
 
             gl.bindVertexArray(object.drawInfo.vertexArray);
             gl.drawElements(gl.TRIANGLES, object.drawInfo.indicesLength, gl.UNSIGNED_SHORT, 0);
@@ -213,7 +219,7 @@ async function init() {
     }
     utils.resizeCanvasToDisplaySize(gl.canvas);
 
-    await utils.loadFiles([shaderDir + 'vs.glsl', shaderDir + 'fs.glsl'], function (shaderText) {
+    await utils.loadFiles([shaderDir + 'vertex_shader.glsl', shaderDir + 'fragment_shader.glsl'], function (shaderText) {
         console.log(shaderText[0]);
         console.log(shaderText[1]);
         let vertexShader = utils.createShader(gl, gl.VERTEX_SHADER, shaderText[0]);
