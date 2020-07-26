@@ -238,8 +238,8 @@ window.onload = init();
 function getLocalMatrix(position, rotation, scale) {
     let matricesList = [
         utils.MakeTranslateMatrix(position[0], position[1], position[2]),
-        utils.MakeRotateXMatrix(rotation[0]),
         utils.MakeRotateYMatrix(rotation[1]),
+        utils.MakeRotateXMatrix(rotation[0]),
         utils.MakeRotateZMatrix(rotation[2]),
         utils.MakeScaleMatrix(scale[0], scale[1], scale[2]),
     ];
