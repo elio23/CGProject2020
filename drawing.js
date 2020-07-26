@@ -242,7 +242,7 @@ function doResize() {
     var w=canvas.clientWidth;
     var h=canvas.clientHeight;
 
-    gl.clearColor(0.0, 1.0, 1.0, 1.0);
+    //gl.clearColor(0.0, 1.0, 1.0, 1.0);
     gl.viewport(0.0, 0.0, w, h);
 
     aspect = w/h;
