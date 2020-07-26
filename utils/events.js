@@ -11,6 +11,16 @@ function toggleMenu() {
     else legend.style.display = "none";
 }
 
+function onDropdownChange(objectIndex, textureIndex){
+    console.log("texture: " + objectIndex + " " + textureIndex);
+    objects[objectIndex].drawInfo.currentTextureIndex = textureIndex; //change texture
+}
+
+function onSliderChange(objectIndex, colorIndex, colorValue){
+    objects[objectIndex].drawInfo.materialColor[colorIndex]=colorValue; //change color
+    console.log("color: " + objects[objectIndex].drawInfo.materialColor);
+}
+
 
 function doMouseDown(event) {
     lastMouseX = event.pageX;

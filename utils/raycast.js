@@ -53,9 +53,60 @@ function raycastMouseUp(ev){
                 console.log(objects[i])
                 //colours[i] = [Math.random(), Math.random(), Math.random(), 1];
                 document.getElementById("selected").innerText = objects[i].parent.label
+
+                //create textures selection drop-down menu
+                dropDownMenu(i);
+
+                //create sliders to change material color
+                sliders(i);
             }
             else {
             }
         }
+    }
+}
+
+function dropDownMenu(i){
+    var dropDown = document.getElementById("drop-down");
+    dropDown.innerHTML="";
+    dropDown.setAttribute("onchange","onDropdownChange("+i+",this.value);");
+    objects[i].drawInfo.textures.forEach((texture)=>{
+        var textureIndex = objects[i].drawInfo.textures.indexOf(texture);
+        var option = document.createElement("option");
+        option.setAttribute("value",textureIndex);    //"objectIndex - textureIndex"
+        option.innerText=models[items[i].model].modelTextures[textureIndex];
+        if(objects[i].drawInfo.textures.indexOf(texture) === objects[i].drawInfo.currentTextureIndex) option.selected="selected";
+        dropDown.appendChild(option);
+    });
+}
+
+function  sliders(i) {
+    var sliders = document.getElementById("slider1");
+    sliders.innerHTML="";
+
+    for(let j=0;j<3;j++){
+        switch (j) {
+            case 0: var label = document.createElement("span");
+                    sliders.appendChild(label);
+                    label.innerText = "R ";
+                    break;
+            case 1: var label = document.createElement("span");
+                    sliders.appendChild(label);
+                    label.innerText = "G ";
+                    break;
+            case 2: var label = document.createElement("span");
+                    sliders.appendChild(label);
+                    label.innerText = "B ";
+                    break;
+        }
+        let slide = document.createElement("input");
+        slide.setAttribute("type","range");
+        slide.setAttribute("min","0");
+        slide.setAttribute("max","1");
+        slide.setAttribute("step","0.1");
+        slide.setAttribute("value",objects[i].drawInfo.materialColor[j]);
+        slide.setAttribute("onchange","onSliderChange("+i+","+j+",this.value);");
+        sliders.appendChild(slide);
+        sliders.appendChild(document.createElement("br"));
     }
 }
