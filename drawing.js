@@ -43,8 +43,8 @@ function main() {
     let dirLightBeta = -utils.degToRad(30);
     let directionalLight = [Math.cos(dirLightAlpha) * Math.cos(dirLightBeta),
         Math.sin(dirLightAlpha), Math.cos(dirLightAlpha) * Math.sin(dirLightBeta)];
-    let directionalLightColor = [0.5, 0.5, 0.5];
-    let ambientLight = [0.3,0.3,0.3];
+    let directionalLightColor = [0.6, 0.6, 0.6];
+    let ambientLight = [0.4,0.4,0.4];
     let ambientColor = [1.0,1.0,1.0];
 
     window.onresize = doResize; //register resize event
@@ -127,8 +127,7 @@ function main() {
     requestAnimationFrame(drawScene);
 
     // Draw the scene called for each frame
-    function drawScene(time) {
-        time *= 0.001;
+    function drawScene() {
 
         gl.clearColor(0.9, 0.77, 0.5, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -157,13 +156,12 @@ function main() {
 
             perspectiveMatrix = utils.MakePerspective(60, aspect, 1.0, 2000.0);
 
-            let projectionMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);
-            projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, projectionMatrix);
+            let cameraSpaceMatrix = utils.multiplyMatrices(viewMatrix, object.worldMatrix);
+            let projectionMatrix = utils.multiplyMatrices(perspectiveMatrix, cameraSpaceMatrix);
             let normalMatrix = utils.invertMatrix(utils.transposeMatrix(object.worldMatrix));
 
             gl.uniformMatrix4fv(matrixLocation, gl.FALSE, utils.transposeMatrix(projectionMatrix));
             gl.uniformMatrix4fv(normalMatrixPositionHandle, gl.FALSE, utils.transposeMatrix(normalMatrix));
-
 
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, object.drawInfo.textures[object.drawInfo.currentTextureIndex]); // default texture is randomly chosen
@@ -241,7 +239,6 @@ function doResize() {
     var w=canvas.clientWidth;
     var h=canvas.clientHeight;
 
-    gl.clearColor(0.0, 1.0, 1.0, 1.0);
     gl.viewport(0.0, 0.0, w, h);
 
     aspect = w/h;
